@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# macOS files
+.DS_Store
+
+# JetBrains config files
+.idea/
+cmake-build-debug/
