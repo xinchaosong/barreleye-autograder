@@ -1,0 +1,6 @@
+{
+  "git_config": {
+    "ssh_key_path": "~/.ssh/example_ssh",
+    "roster_csv": "roster.csv"
+  }
+}
