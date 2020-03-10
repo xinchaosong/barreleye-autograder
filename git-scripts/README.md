@@ -6,7 +6,7 @@ This tool is developed and tested with Python 3.7 on Debian 10. Using any other 
 
 ### Dependency:
 
-- Pandas
+- [Pandas](https://pandas.pydata.org/docs/getting_started/install.html)
 
 ### Preparation before running the script:
 
