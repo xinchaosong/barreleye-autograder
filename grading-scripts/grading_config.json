@@ -1,0 +1,17 @@
+{
+  "config": {
+    "0": {
+      "assignment_title": "",
+      "student_roster": "",
+      "tests_list": "",
+      "command": "",
+      "source_files": "",
+      "grader_test_file": "",
+      "student_test_file": "",
+      "grader_target": "",
+      "student_target": "",
+      "memory_leak_test_id": [
+      ]
+    }
+  }
+}
