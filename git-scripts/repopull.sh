@@ -5,7 +5,7 @@
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
 if [ -n "$1" ]; then
-  python3 repopull.py "$1"
+  python3 repopull.py -i "$1"
 else
   python3 repopull.py
 fi
