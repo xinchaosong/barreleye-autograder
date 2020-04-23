@@ -96,6 +96,6 @@ The detailed scores and grading comments will be shown on the screen.
 
 For grading a student whose id is 6 in the *roster.csv*, locate at the top level of the grading folder and run
 
-    ./grade.sh 6 -l
+    ./grade.sh 6 -m
 
 The Valgrind output will be shown on the screen.
