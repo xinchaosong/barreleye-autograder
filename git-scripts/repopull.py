@@ -4,10 +4,11 @@
 # April 21, 2020
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
-import sys
 import os
 import subprocess
+import argparse
 import json
+
 import pandas as pd
 
 ssh_key_path = None
@@ -53,7 +54,6 @@ def del_folder(folder_name):
 
 def repopull(clone_flag):
     global ssh_key_path
-    global max_trial
 
     git_config = load_config()
     ssh_key_path = git_config['ssh_key_path']
@@ -101,14 +101,15 @@ def repopull(clone_flag):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 1:
-        repopull(False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '-id', type=int)
+    parser.add_argument('-c', action='store_true', help='clone without trying to pull')
+    args = parser.parse_args()
 
-    elif len(sys.argv) == 2 and sys.argv[1] == "-c":
+    m_sid = int(args.i)
+    m_clone_only = args.c
+
+    if m_clone_only:
         repopull(True)
-
     else:
-        print("usage:")
-        print("repopull.py: pull all repos.")
-        print("repopull.py -c: clone all repos.")
-        exit(1)
+        repopull(False)

@@ -4,10 +4,10 @@
 # April 21, 2020
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
-import json
 import os
 import subprocess
 import argparse
+import json
 
 import pandas as pd
 
@@ -150,14 +150,14 @@ if __name__ == "__main__":
     parser.add_argument('-l', action='store_false', help='only run memory leak check but not tests')
     args = parser.parse_args()
 
-    sid = int(args.i)
+    m_sid = int(args.i)
     m_run_test = args.l
     m_check_leak = args.t
 
     m_configs = load_config()
 
     for config_id in m_configs:
-        if sid is None:
+        if m_sid is None:
             num_students = pd.read_csv(os.path.join(os.path.dirname(__file__),
                                                     m_configs[config_id]['student_roster'])).shape[0]
 
@@ -165,5 +165,5 @@ if __name__ == "__main__":
                 grade(config=m_configs[config_id], student_id=s, run_test=m_run_test, check_leak=m_check_leak,
                       show_details=False)
         else:
-            grade(config=m_configs[config_id], student_id=sid, run_test=m_run_test, check_leak=m_check_leak,
+            grade(config=m_configs[config_id], student_id=m_sid, run_test=m_run_test, check_leak=m_check_leak,
                   show_details=True)
