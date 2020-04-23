@@ -7,7 +7,7 @@
 import json
 import os
 import subprocess
-import sys
+import argparse
 
 import pandas as pd
 
@@ -40,7 +40,7 @@ def generate_compiling_cnd(config):
 def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=False):
     assignment_title = config['assignment_title']
     grader_gcc_cmd, student_gcc_cmd = generate_compiling_cnd(config)
-    student_roster = pd.read_csv(os.path.join(os.path.dirname(__file__), config['student_roster']))
+    student_roster = pd.read_csv(os.path.join(os.path.dirname(__file__), config['student_roster']), index_col=0)
     test_list = pd.read_csv(os.path.join(os.path.dirname(__file__), config['tests_list']))
     last_name = str(student_roster.loc[student_id, 'last_name'])
     first_name = str(student_roster.loc[student_id, 'first_name'])
@@ -145,37 +145,15 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
 
 
 if __name__ == "__main__":
-    sid = None
-    m_run_test = True
-    m_check_leak = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '-id', type=int)
+    parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
+    parser.add_argument('-l', action='store_false', help='only run memory leak check but not tests')
+    args = parser.parse_args()
 
-    try:
-        if len(sys.argv) == 1:
-            m_run_test = True
-            m_check_leak = False
-
-        elif len(sys.argv) == 2:
-            sid = int(sys.argv[1]) - 1
-            m_run_test = True
-            m_check_leak = True
-
-        elif len(sys.argv) == 3 and sys.argv[2] == "-t":
-            sid = int(sys.argv[1]) - 1
-            m_run_test = True
-            m_check_leak = False
-
-        elif len(sys.argv) == 3 and sys.argv[2] == "-m":
-            sid = int(sys.argv[1]) - 1
-            m_run_test = False
-            m_check_leak = True
-
-        else:
-            print("Argument error.")
-            exit(1)
-
-    except Exception:
-        print("Argument error.")
-        exit(1)
+    sid = int(args.i)
+    m_run_test = args.l
+    m_check_leak = args.t
 
     m_configs = load_config()
 
