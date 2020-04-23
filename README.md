@@ -2,7 +2,7 @@
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Opisthoproctus_soleatus.png" width="200" alt="A barreleye fish">
 
-A simple autograder for the computer science courses using GitHub to submit programming homework. It has been used for the following courses at Northeastern University:
+A simple autograder for the computer science courses using GitHub to submit programming homework. It has been used for the following courses at Northeastern University, Boston:
 
 - CS 3520: Programming in C++, Spring 2020
  
