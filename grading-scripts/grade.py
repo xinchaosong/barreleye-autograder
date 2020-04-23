@@ -12,10 +12,6 @@ import argparse
 import pandas as pd
 
 
-def run_valgrind(cmd_str):
-    subprocess.call(cmd_str, shell=True, timeout=5)
-
-
 def load_config():
     with open("grading_config.json", 'r') as load_f:
         load_dict = json.load(load_f)
@@ -73,7 +69,7 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
             try:
                 command = "./%s/%s" % (assignment_path, config['grader_target'])
 
-                score_output = subprocess.check_output([command, str(j + 1)], shell=False, timeout=5)
+                score_output = subprocess.check_output([command, str(j + 1)], shell=False, timeout=30)
                 score_output = score_output.decode().splitlines()
 
                 if score_output[-1].startswith("Score:"):
@@ -113,9 +109,11 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
 
         try:
             command = "cd %s " \
-                      "&& %s " \
-                      "&& valgrind ./%s" % (assignment_path, student_gcc_cmd, config['student_target'])
-            run_valgrind(command)
+                      "&& %s " % (assignment_path, student_gcc_cmd)
+            subprocess.call(command, shell=True)
+
+            exe_path = "./%s/%s" % (assignment_path, config['student_target'])
+            subprocess.call(["valgrind", "--log-fd=1", exe_path], shell=False, timeout=30)
 
         except subprocess.CalledProcessError:
             pass
@@ -131,11 +129,12 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
 
             try:
                 command = "cd %s " \
-                          "&& %s " \
-                          "&& valgrind --log-fd=1 ./%s %d" \
-                          % (assignment_path, grader_gcc_cmd, config['grader_target'],
-                             config['memory_leak_test_id'][idx])
-                run_valgrind(command)
+                          "&& %s " % (assignment_path, grader_gcc_cmd)
+                subprocess.call(command, shell=True)
+
+                exe_path = "./%s/%s" % (assignment_path, config['grader_target'])
+                test_id = str(config['memory_leak_test_id'][idx])
+                subprocess.call(["valgrind", "--log-fd=1", exe_path, test_id], shell=False, timeout=30)
 
             except subprocess.CalledProcessError:
                 pass
