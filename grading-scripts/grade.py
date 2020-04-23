@@ -150,7 +150,7 @@ if __name__ == "__main__":
     parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
     args = parser.parse_args()
 
-    m_sid = int(args.i)
+    m_sid = args.i
     m_run_test = args.m
     m_check_leak = args.t
 
@@ -165,5 +165,5 @@ if __name__ == "__main__":
                 grade(config=m_configs[config_id], student_id=s, run_test=m_run_test, check_leak=m_check_leak,
                       show_details=False)
         else:
-            grade(config=m_configs[config_id], student_id=m_sid, run_test=m_run_test, check_leak=m_check_leak,
+            grade(config=m_configs[config_id], student_id=int(m_sid), run_test=m_run_test, check_leak=m_check_leak,
                   show_details=True)
