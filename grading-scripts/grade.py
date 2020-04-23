@@ -147,11 +147,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '-id', type=int)
     parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
-    parser.add_argument('-l', action='store_false', help='only run memory leak check but not tests')
+    parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
     args = parser.parse_args()
 
     m_sid = int(args.i)
-    m_run_test = args.l
+    m_run_test = args.m
     m_check_leak = args.t
 
     m_configs = load_config()
