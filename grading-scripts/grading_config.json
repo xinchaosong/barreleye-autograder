@@ -2,14 +2,14 @@
   "config": {
     "0": {
       "assignment_title": "",
-      "student_roster": "",
-      "tests_list": "",
+      "student_roster": "roster.csv",
+      "tests_list": "test_list.csv",
       "command": "",
       "source_files": "",
       "grader_test_file": "",
       "student_test_file": "",
-      "grader_target": "",
-      "student_target": "",
+      "grader_target": "grader",
+      "student_target": "student",
       "memory_leak_test_id": [
       ]
     }
