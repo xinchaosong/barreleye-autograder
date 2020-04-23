@@ -8,12 +8,12 @@ A simple autograder for the computer science courses using GitHub to submit prog
  
 ## Working Environment:
 
-This tool is developed and tested with Python 3.7 on Debian 10. Using any other version of Python 3 or working on any other distribution of Linux should also work. Not check for macOS yet.
+This tool is developed and tested with Python 3.8 on Debian 10. Using any other version of Python 3 or working on any other distribution of Linux should also work. Not check for macOS yet.
 
 ### Dependency:
 
 - [Pandas](https://pandas.pydata.org/docs/getting_started/install.html)
-- Valgrind
+- [Valgrind](http://valgrind.org/downloads/current.html)
 
 ## GitHub Repository Pulling Tool
 
