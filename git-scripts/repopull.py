@@ -62,7 +62,7 @@ def del_folder(folder_name):
     subprocess.call("rm -rf %s" % folder_name, shell=True)
 
 
-def pull_repo(student_info):
+def pull_repo(student_info, is_all=True):
     trial = 0
     last_name = student_info['last_name'].lower()
     first_name = student_info['first_name'].lower()
@@ -87,7 +87,7 @@ def pull_repo(student_info):
         del_folder(folder_name)
         trial += 1
 
-    if trial >= 3:
+    if trial >= 3 and is_all:
         print("\nUnsolvable error.")
 
         while True:
@@ -112,7 +112,7 @@ def repopull(sid):
         for i_student in roster.values():
             pull_repo(student_info=i_student)
     else:
-        pull_repo(student_info=roster[sid])
+        pull_repo(student_info=roster[sid], is_all=False)
 
 
 if __name__ == "__main__":
