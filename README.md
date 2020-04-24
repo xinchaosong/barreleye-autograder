@@ -2,17 +2,15 @@
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Opisthoproctus_soleatus.png" width="200" alt="A barreleye fish">
 
-A simple autograder for the computer science courses using GitHub to submit programming homework. It has been used for the following courses at Northeastern University, Boston:
+A simple autograder for the computer science courses using GitHub to submit C/C++ programming homework. It has been used for the following courses at Northeastern University, Boston:
 
 - CS 3520: Programming in C++, Spring 2020
  
-## Working Environment:
+## Environment Requirements:
 
-This tool is developed and tested with Python 3.8 on Debian 10. Using any other version of Python 3 or working on any other distribution of Linux should also work. Not check for macOS yet.
-
-### Dependency:
-
-- [Valgrind](http://valgrind.org/downloads/current.html)
+- Linux or macOS
+- Python >= 3.6
+- [Valgrind](http://valgrind.org/downloads/current.html) installed
 
 ## GitHub Repository Pulling Tool
 
