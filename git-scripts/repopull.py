@@ -106,7 +106,7 @@ def repopull(sid):
 
     git_config = load_config()
     g_ssh_key_path = git_config['ssh_key_path']
-    roster = load_csv(git_config['roster_csv'])
+    roster = load_csv(git_config['roster_path'])
 
     if sid is None:
         for i_student in roster.values():

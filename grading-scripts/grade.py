@@ -175,7 +175,7 @@ def grade(sid, run_test, check_leak):
     configs = load_config()
 
     for i_config in configs.values():
-        roster = load_csv(i_config['student_roster'])
+        roster = load_csv(i_config['roster_path'])
         test_list = load_csv(i_config['tests_list'])
 
         if sid is None:

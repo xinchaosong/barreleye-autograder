@@ -2,7 +2,7 @@
   "config": {
     "0": {
       "assignment_title": "",
-      "student_roster": "roster.csv",
+      "roster_path": "roster.csv",
       "tests_list": "test_list.csv",
       "command": "",
       "source_files": "",

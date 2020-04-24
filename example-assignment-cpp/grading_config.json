@@ -2,7 +2,7 @@
   "config": {
     "0": {
       "assignment_title": "example_assignment_cpp",
-      "student_roster": "example_roster.csv",
+      "roster_path": "example_roster.csv",
       "tests_list": "example_test_list.csv",
       "command": "g++",
       "source_files": "homework.cpp homework.hpp",
