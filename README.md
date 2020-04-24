@@ -86,7 +86,7 @@ For grading a student whose id is 6 in the *roster.csv*, under the grading folde
           "grader_target": "grader",                   // The output target of the grading tests
           "student_target": "student",                 // The output target of the student' own tests
           "timeout": 30,                               // Timeout in second
-          "memory_leak_test_id": [                     // The file name of the student roster
+          "memory_leak_test_id": [                     // The ids of grading tests to check memory leak
             1,
             4
           ]
