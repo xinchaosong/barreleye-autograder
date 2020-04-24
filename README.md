@@ -25,22 +25,31 @@ A simple autograder for the computer science courses using GitHub to submit C/C+
     - *git_config.json*
     - *repopull.py*
     - *repopull.sh*
+    
+### Configuration Manual
+
+    {
+      "git_config": {
+        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH key for GitHub
+        "roster_path": "example_roster.csv"    // The file name of the student roster
+      }
+    }
 
 ### Usage
 
 If we use *example-assignment-c* attached as an example, here are the available operations as follows.
 
-#### Pull all students' repositories:
+#### Pull/Clone all students' repositories:
 
-Under the grading folder, use the following command to pull all repositories. If any repository is not pulled successfully, the program will try to re-clone it up to three times.
+Under the grading folder, use the following command to pull all repositories. If any repository is not cloned successfully, the program will try to re-clone it up to three times. If the clone still fails, the program will prompt if the user wants to give up cloning and continue to process the next repository or exit the program.
 
     ./repopull.sh
 
-#### Clone all students' repositories:
+#### Clone a specific student's repository:
 
-Under the grading folder, use the following command to clone all repositories. If any repository is not cloned successfully, the program will try to re-clone it up to three times. If the clone still fails, the program will prompt if the user wants to give up cloning and continue to process the next repository or exit the program. 
+For grading a student whose id is 6 in the *roster.csv*, under the grading folder, use the following command to clone his/her repository. If the repository is not cloned successfully, the program will try to re-clone it up to three times before giving up.
 
-    ./repopull.sh -c
+    ./repopull.sh 6
 
 ## Auto-Grading Tool with Tests
 
@@ -60,6 +69,29 @@ Under the grading folder, use the following command to clone all repositories. I
 	- *grade.py*
 
 (*roster.csv*, *grading\_tests.c*, or *test_list.csv* can be any name provided that the new name matches the grading configuration in *git_config.json*)
+
+### Configuration Manual 
+
+    {
+      "config": {
+        "0": {
+          "assignment_title": "example_assignment_c",  // The title of the homework to be graded
+          "roster_path": "example_roster.csv",         // The file name of the student roster
+          "tests_list": "example_test_list.csv",       // The file name of the test list
+          "command": "gcc",                            // Compile command with flags
+          "source_files": "homework.c homework.h",     // The file name of source files to be graded
+          "grader_test_file": "grading_tests.c",       // The file name of the grading tests
+          "student_test_file": "main.c",               // The file name of the student' own tests
+          "grader_target": "grader",                   // The output target of the grading tests
+          "student_target": "student",                 // The output target of the student' own tests
+          "timeout": 30,                               // Timeout in second
+          "memory_leak_test_id": [                     // The file name of the student roster
+            1,
+            4
+          ]
+        }
+      }
+    }
 
 ### Usage
 
