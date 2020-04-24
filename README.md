@@ -74,6 +74,7 @@ For grading a student whose id is 6 in the *roster.csv*, under the grading folde
 
     {
       "config": {
+        // May setup multiple coonfigurations to run one by one
         "0": {
           "assignment_title": "example_assignment_c",  // The title of the homework to be graded
           "roster_path": "example_roster.csv",         // The file name of the student roster
