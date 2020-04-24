@@ -6,7 +6,7 @@ A simple autograder for the computer science courses using GitHub to submit C/C+
 
 - CS 3520: Programming in C++, Spring 2020
  
-## Environment Requirements:
+## Environment Requirements
 
 - Linux or macOS
 - Python >= 3.6
