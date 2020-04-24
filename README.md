@@ -12,7 +12,6 @@ This tool is developed and tested with Python 3.8 on Debian 10. Using any other 
 
 ### Dependency:
 
-- [Pandas](https://pandas.pydata.org/docs/getting_started/install.html)
 - [Valgrind](http://valgrind.org/downloads/current.html)
 
 ## GitHub Repository Pulling Tool

@@ -4,16 +4,14 @@
 # April 21, 2020
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
-import os
-import subprocess
 import argparse
+import os
 import json
+import csv
+import subprocess
 
-import pandas as pd
-
-ssh_key_path = None
-roster = None
-max_trial = 3
+MAX_TRIAL = 3
+g_ssh_key_path = ""
 
 
 def load_config():
@@ -23,43 +21,54 @@ def load_config():
     return load_dict['git_config']
 
 
-def git_clone(folder_name, git_ssh):
-    global ssh_key_path
+def load_csv(csv_path):
+    data_sheet = {}
 
+    if not os.path.exists(csv_path):
+        csv_path = os.path.join(os.path.dirname(__file__), csv_path)
+
+    with open(csv_path, 'r') as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            data_sheet[row['id']] = row
+
+    return data_sheet
+
+
+def git_clone(folder_name, git_ssh):
     command = "eval `ssh-agent -s` " \
               "&& ssh-add %s " \
               "&& mkdir %s " \
               "&& cd %s " \
               "&& git clone %s" \
-              % (ssh_key_path, folder_name, folder_name, git_ssh)
+              % (g_ssh_key_path, folder_name, folder_name, git_ssh)
 
     return subprocess.call(command, shell=True)
 
 
 def git_pull(repo_path):
-    global ssh_key_path
-
     command = "eval `ssh-agent -s` " \
               "&& ssh-add %s " \
               "&& cd %s " \
               "&& git checkout . " \
               "&& git pull" \
-              % (ssh_key_path, repo_path)
+              % (g_ssh_key_path, repo_path)
 
     return subprocess.call(command, shell=True)
 
 
 def del_folder(folder_name):
-    return subprocess.call("rm -rf %s" % folder_name, shell=True)
+    subprocess.call("rm -rf %s" % folder_name, shell=True)
 
 
-def pull_repo(sid):
+def pull_repo(student_info):
     trial = 0
-    last_name = str(roster.loc[sid, 'last_name'])
-    first_name = str(roster.loc[sid, 'first_name'])
-    git_ssh = str(roster.loc[sid, 'git_ssh'])
-    repo_name = str(roster.loc[sid, 'repo_name'])
-    folder_name = last_name.lower() + '_' + first_name.lower()
+    last_name = student_info['last_name'].lower()
+    first_name = student_info['first_name'].lower()
+    git_ssh = student_info['git_ssh']
+    repo_name = student_info['repo_name']
+    folder_name = last_name + '_' + first_name
     repo_path = folder_name + '/' + repo_name
 
     print(first_name + " " + last_name + ":")
@@ -72,7 +81,7 @@ def pull_repo(sid):
     print("Trying to re-clone it...")
     del_folder(folder_name)
 
-    while git_clone(folder_name, git_ssh) != 0 and trial < max_trial:
+    while (git_clone(folder_name, git_ssh) != 0) and (trial < MAX_TRIAL):
         print("Failed to clone the repo of this student.")
         print("Re-cloning...")
         del_folder(folder_name)
@@ -92,20 +101,23 @@ def pull_repo(sid):
     print()
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '-id', type=int)
-    args = parser.parse_args()
-
-    m_sid = args.i
+def repopull(sid):
+    global g_ssh_key_path
 
     git_config = load_config()
-    ssh_key_path = git_config['ssh_key_path']
-    roster_csv = git_config['roster_csv']
-    roster = pd.read_csv(os.path.join(os.path.dirname(__file__), roster_csv), index_col=0)
+    g_ssh_key_path = git_config['ssh_key_path']
+    roster = load_csv(git_config['roster_csv'])
 
-    if m_sid is None:
-        for s in range(roster.shape[0]):
-            pull_repo(s)
+    if sid is None:
+        for i_student in roster.values():
+            pull_repo(student_info=i_student)
     else:
-        pull_repo(int(m_sid))
+        pull_repo(student_info=roster[sid])
+
+
+if __name__ == "__main__":
+    m_parser = argparse.ArgumentParser()
+    m_parser.add_argument('-i', '-id')
+    m_args = m_parser.parse_args()
+
+    repopull(sid=m_args.i)

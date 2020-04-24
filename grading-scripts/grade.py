@@ -4,12 +4,11 @@
 # April 21, 2020
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
-import os
-import subprocess
 import argparse
+import os
 import json
-
-import pandas as pd
+import csv
+import subprocess
 
 
 def load_config():
@@ -17,6 +16,21 @@ def load_config():
         load_dict = json.load(load_f)
 
     return load_dict['config']
+
+
+def load_csv(csv_path):
+    data_sheet = {}
+
+    if not os.path.exists(csv_path):
+        csv_path = os.path.join(os.path.dirname(__file__), csv_path)
+
+    with open(csv_path, 'r') as f:
+        reader = csv.DictReader(f)
+
+        for row in reader:
+            data_sheet[row['id']] = row
+
+    return data_sheet
 
 
 def generate_compiling_cnd(config):
@@ -33,15 +47,13 @@ def generate_compiling_cnd(config):
     return grader_gcc_cmd, student_gcc_cmd
 
 
-def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=False):
+def grade_single(config, student_info, test_list, run_test, check_leak, show_details=True, to_csv=False):
     assignment_title = config['assignment_title']
     grader_gcc_cmd, student_gcc_cmd = generate_compiling_cnd(config)
-    student_roster = pd.read_csv(os.path.join(os.path.dirname(__file__), config['student_roster']), index_col=0)
-    test_list = pd.read_csv(os.path.join(os.path.dirname(__file__), config['tests_list']))
-    last_name = str(student_roster.loc[student_id, 'last_name'])
-    first_name = str(student_roster.loc[student_id, 'first_name'])
-    repo_name = str(student_roster.loc[student_id, 'repo_name'])
-    folder_name = last_name.lower() + '_' + first_name.lower() + '/' + repo_name
+    last_name = student_info['last_name'].lower()
+    first_name = student_info['first_name'].lower()
+    repo_name = student_info['repo_name']
+    folder_name = last_name + '_' + first_name + '/' + repo_name
     assignment_path = folder_name + '/' + assignment_title
     grading_comment = ""
 
@@ -61,15 +73,15 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
                          grader_gcc_cmd)
             subprocess.call(command, shell=True)
 
-        except Exception:
+        except subprocess.CalledProcessError:
             print("cp fails: %s" % command)
             return
 
-        for j in range(test_list.shape[0]):
+        for tid, item in test_list.items():
             try:
                 command = "./%s/%s" % (assignment_path, config['grader_target'])
 
-                score_output = subprocess.check_output([command, str(j + 1)], shell=False, timeout=30)
+                score_output = subprocess.check_output([command, tid], shell=False, timeout=30)
                 score_output = score_output.decode().splitlines()
 
                 if score_output[-1].startswith("Score:"):
@@ -78,24 +90,25 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
                 else:
                     score = 0
 
-            except Exception:
+            except subprocess.CalledProcessError:
                 score = 0
 
             if score == 0:
-                score_deducted -= test_list.iloc[j, 2]
-                grading_comment += "(-" + str(test_list.iloc[j, 2]) + ") " + str(test_list.iloc[j, 1]) + "\n"
+                score_deducted -= item['points']
+                grading_comment += "(-" + item['points'] + ") " + item['grading_comment'] + "\n"
 
             total += score
 
             if show_details:
-                print("Test case #%d: %f" % (j + 1, score))
+                print("Test case #%s: %f" % (tid, score))
 
-        full_points = sum(test_list.iloc[i, 2] for i in range(test_list.shape[0]))
+        full_points = sum(float(test_list[i]['points']) for i in test_list)
 
         print("Lost points: %.2f, total grade: %.2f / %.2f\n" % (score_deducted, total, full_points))
 
         if show_details:
             print("Grading comments:")
+
             if score_deducted == 0:
                 print("Good job!")
             else:
@@ -105,7 +118,7 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
 
     if check_leak:
         if show_details:
-            print("Memory leak check: the student's unit tests\n")
+            print("Memory leak examination: the student's unit tests\n")
 
         try:
             command = "cd %s " \
@@ -116,6 +129,7 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
             subprocess.call(["valgrind", "--log-fd=1", exe_path], shell=False, timeout=30)
 
         except subprocess.CalledProcessError:
+            print("Memory leak examination: ERROR\n")
             pass
 
         if show_details:
@@ -137,33 +151,34 @@ def grade(config, student_id, run_test, check_leak, show_details=True, to_csv=Fa
                 subprocess.call(["valgrind", "--log-fd=1", exe_path, test_id], shell=False, timeout=30)
 
             except subprocess.CalledProcessError:
+                print("Memory leak examination: ERROR\n")
                 pass
 
             if show_details:
                 print("\n")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '-id', type=int)
-    parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
-    parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
-    args = parser.parse_args()
+def grade(sid, run_test, check_leak):
+    configs = load_config()
 
-    m_sid = args.i
-    m_run_test = args.m
-    m_check_leak = args.t
+    for i_config in configs.values():
+        roster = load_csv(i_config['student_roster'])
+        test_list = load_csv(i_config['tests_list'])
 
-    m_configs = load_config()
-
-    for config_id in m_configs:
-        if m_sid is None:
-            num_students = pd.read_csv(os.path.join(os.path.dirname(__file__),
-                                                    m_configs[config_id]['student_roster'])).shape[0]
-
-            for s in range(num_students):
-                grade(config=m_configs[config_id], student_id=s, run_test=m_run_test, check_leak=m_check_leak,
-                      show_details=False)
+        if sid is None:
+            for i_student in roster.values():
+                grade_single(config=i_config, student_info=i_student, test_list=test_list,
+                             run_test=run_test, check_leak=check_leak, show_details=False)
         else:
-            grade(config=m_configs[config_id], student_id=int(m_sid), run_test=m_run_test, check_leak=m_check_leak,
-                  show_details=True)
+            grade_single(config=i_config, student_info=roster[sid], test_list=test_list,
+                         run_test=run_test, check_leak=check_leak, show_details=True)
+
+
+if __name__ == "__main__":
+    m_parser = argparse.ArgumentParser()
+    m_parser.add_argument('-i', '-id')
+    m_parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
+    m_parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
+    m_args = m_parser.parse_args()
+
+    grade(sid=m_args.i, run_test=m_args.m, check_leak=m_args.t)
