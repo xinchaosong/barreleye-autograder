@@ -10,6 +10,7 @@
       "student_test_file": "",
       "grader_target": "grader",
       "student_target": "student",
+      "timeout": 30,
       "memory_leak_test_id": [
       ]
     }

@@ -138,7 +138,8 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
             subprocess.call(command, shell=True)
 
             exe_path = "./%s/%s" % (assignment_path, config['student_target'])
-            subprocess.call(["valgrind", "--log-fd=1", exe_path], shell=False, timeout=30)
+            command = ["valgrind", "--log-fd=1", exe_path]
+            subprocess.call(command, shell=False, timeout=config['timeout'])
 
         except subprocess.CalledProcessError:
             print("Memory leak examination: ERROR\n")
@@ -157,7 +158,8 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
                 subprocess.call(command, shell=True)
 
                 exe_path = "./%s/%s" % (assignment_path, config['grader_target'])
-                subprocess.call(["valgrind", "--log-fd=1", exe_path, str(i_tid)], shell=False, timeout=30)
+                command = ["valgrind", "--log-fd=1", exe_path, str(i_tid)]
+                subprocess.call(command, shell=False, timeout=config['timeout'])
 
             except subprocess.CalledProcessError:
                 print("Memory leak examination: ERROR\n")
