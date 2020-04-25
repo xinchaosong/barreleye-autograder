@@ -9,8 +9,3 @@ add_executable(cpp_main
         main.cpp
         homework.hpp
         homework.cpp)
-
-add_executable(cpp_grade
-        grading_tests.cpp
-        homework.hpp
-        homework.cpp)

@@ -9,8 +9,3 @@ add_executable(c_main
         main.c
         homework.h
         homework.c)
-
-add_executable(c_grade
-        grading_tests.c
-        homework.h
-        homework.c)

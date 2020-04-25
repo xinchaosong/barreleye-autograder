@@ -5,35 +5,20 @@
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
 import argparse
-import os
 import json
-import csv
 import subprocess
+
+from scripts import util
 
 MAX_TRIAL = 3
 g_ssh_key_path = ""
 
 
 def load_config():
-    with open("git_config.json", 'r') as load_f:
+    with open("../config/git_config.json", 'r') as load_f:
         load_dict = json.load(load_f)
 
     return load_dict['git_config']
-
-
-def load_csv(csv_path):
-    data_sheet = {}
-
-    if not os.path.exists(csv_path):
-        csv_path = os.path.join(os.path.dirname(__file__), csv_path)
-
-    with open(csv_path, 'r') as f:
-        reader = csv.DictReader(f)
-
-        for row in reader:
-            data_sheet[row['id']] = row
-
-    return data_sheet
 
 
 def git_clone(folder_name, git_ssh):
@@ -106,7 +91,7 @@ def repopull(sid):
 
     git_config = load_config()
     g_ssh_key_path = git_config['ssh_key_path']
-    roster = load_csv(git_config['roster_path'])
+    roster = util.load_csv(git_config['roster_path'])
 
     if sid is None:
         for i_student in roster.values():
