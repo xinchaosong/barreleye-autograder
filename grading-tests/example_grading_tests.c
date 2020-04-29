@@ -81,7 +81,7 @@ int main(int argc, const char *argv[]) {
 
     switch (test_id) {
         case 0:
-            printf("Example Assignment C++\n");
+            printf("Example homework C++\n");
             printf("Auto grading...\n\n");
 
             score += unit_test_ptf(&test_func_normal,
