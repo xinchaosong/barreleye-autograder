@@ -182,7 +182,10 @@ def grade(sid, run_test, check_leak):
 
     for i_config in configs.values():
         roster = util.load_csv(path.rosters_path / i_config['roster_file'])
+        homework_title = i_config['homework_title']
         test_list = util.load_csv(path.tests_path / i_config['tests_list_file'])
+
+        print("\n########## %s Grading ########## \n" % homework_title.capitalize())
 
         if sid is None:
             for i_student in roster.values():
@@ -190,6 +193,7 @@ def grade(sid, run_test, check_leak):
                                           run_test=run_test, check_leak=False, show_details=False)
                 i_student.update(all_grades)
 
+            path.grades_path.mkdir(exist_ok=True)
             csv_name = i_config['homework_title'] + "_grades.csv"
             save_grades(path.grades_path / csv_name, roster=roster)
 
