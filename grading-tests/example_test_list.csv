@@ -1,0 +1,5 @@
+id,grading_comment,points
+1,Test case #1 fails for testing a normal function.,25
+2,Test case #2 fails for testing a function with segmentation fault.,25
+3,Test case #3 fails for testing a function with a timeout issue.,25
+4,Test case #4 fails for testing a function with memory leak.,25

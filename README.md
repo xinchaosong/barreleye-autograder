@@ -2,130 +2,98 @@
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Opisthoproctus_soleatus.png" width="200" alt="A barreleye fish">
 
-A simple autograder for the computer science courses using GitHub to submit C/C++ programming homework. It has been used for the following courses at Northeastern University, Boston:
+## Introduction
+
+This repository is a simple autograder for the computer science courses using GitHub to submit C/C++ programming homework. It can automatically clone/pull and grade the repositories of all students in a class using the instructor-made configurations and grading tests. All work can be done under the current folder structure of this repository so that the instructor does not need to copy or move any files manually.
+
+This autograder has been used for the following courses at Northeastern University, Boston:
 
 - CS 3520: Programming in C++, Spring 2020
  
 ## Environment Requirements
 
 - Linux or macOS
-- Python >= 3.6
-- [Valgrind](http://valgrind.org/downloads/current.html) installed
+- Python >= 3.7 (or 3.6 under CPython)
+- Valgrind installed
 
-## GitHub Repository Pulling Tool
+## Preparation 
 
-### Preparation before running the script:
+### Before cloning/pulling the repository of students:
 
 1. Make sure the current terminal can access to GitHub through SSH.
-2. Fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git_config.json*).
-3. Modify the git configuration in *git_config.json* properly.
-4. Copy all following files into a folder used for further grading:
+2. Under the folder **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
+3. Under the folder **config**, modify the git configuration in *git\_config.json* properly. An example is shown below.
 
-    - *roster.csv*
-    - *git_config.json*
-    - *repopull.py*
-    - *repopull.sh*
-    
-### Configuration Manual
+	    {
+	      "git_config": {
+	        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH key for GitHub
+	        "roster_file": "example_roster.csv"    // The file name of the student roster
+	      }
+	    }
 
-    {
-      "git_config": {
-        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH key for GitHub
-        "roster_path": "example_roster.csv"    // The file name of the student roster
-      }
-    }
+### Before running the grading script:
 
-### Usage
+1. Under the folder **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the folder structures of all students and modify anything wrong back to the standard way.
+2. Under the folder **rosters**, fill all information of students into *roster.csv*.
+3. Under the folder **grading-tests**, make a proper test file *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
+5. Under the folder **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below.
 
-If we use *example-assignment-c* attached as an example, here are the available operations as follows.
+		{
+	      "config": {
+	        // May setup multiple coonfigurations to run one by one
+	        "0": {
+	          "homework_title": "example-homework-c",      // The title of the homework to be graded
+	          "roster_file": "example_roster.csv",         // The file name of the student roster
+	          "tests_list_file": "example_test_list.csv",  // The file name of the test list
+	          "command": "gcc",                            // Compile command with flags
+	          "source_files": "homework.c homework.h",     // The file name of source files to be graded
+	          "grader_test_file": "grading_tests.c",       // The file name of the grading tests
+	          "student_test_file": "main.c",               // The file name of the student' own tests
+	          "grader_target": "grader",                   // The output target of the grading tests
+	          "student_target": "student",                 // The output target of the student' own tests
+	          "timeout": 30,                               // Timeout in second
+	          "memory_leak_test_id": [                     // The ids of grading tests to check memory leak
+	            1,
+	            4
+	          ]
+	        }
+	      }
+	    }
 
-#### Pull/Clone all students' repositories:
+**Note:** *roster.csv*, *grading\_tests.c*, or *test\_list.csv* can be any name provided that the new name matches the grading configuration in *git\_config.json*
 
-Under the grading folder, use the following command to pull all repositories. If any repository is not cloned successfully, the program will try to re-clone it up to three times. If the clone still fails, the program will prompt if the user wants to give up cloning and continue to process the next repository or exit the program.
+## Usage
 
-    ./repopull.sh
+If we use the example homework *example-homework-c* attached under the folder **homework** as an example, here are the available operations as follows.
 
-#### Clone a specific student's repository:
+### Clone/Pull all students' repositories:
 
-For grading a student whose id is 6 in the *roster.csv*, under the grading folder, use the following command to clone his/her repository. If the repository is not cloned successfully, the program will try to re-clone it up to three times before giving up.
+    ./barreleye.sh -p
 
-    ./repopull.sh 6
+If any repository is not cloned successfully, the program will try to re-clone it **up to three times**. If the clone still fails for some reason, the program will prompt if the user wants to give up the current cloning and continue to process the next repository, or exit the program.
 
-## Auto-Grading Tool with Tests
+### Clone/Pull a specific student's repository:
 
-### Preparation before running the grading script:
+For grading a student whose id is 1 in the *roster.csv*, use the following command to clone his/her repository. If the repository is not cloned successfully, the program will try to re-clone it **up to three times** before giving up.
 
-1. Fill all information of students into *roster.csv*.
-2. Make a proper test file *grading\_tests.c* compatible with the grader and students' homework.
-3. Make a corresponding test checklist file *test\_list.csv* compatible with the grader and students' homework.
-1. Modify the grading configuration in *grading_config.json* properly.
-4. Check the folder structures of all students and modify anything wrong back to the standard way.
-5. Copy all following files into a folder used for further grading:
+    ./barreleye.sh -p -i 1
 
-	- *roster.csv*
-	- *grading\_tests.c*
-	- *test\_list.csv*
-	- *grade.sh*
-	- *grade.py*
+### Grade for all students together without memory-leak examinations:
 
-(*roster.csv*, *grading\_tests.c*, or *test_list.csv* can be any name provided that the new name matches the grading configuration in *git_config.json*)
+    ./barreleye.sh
 
-### Configuration Manual 
+The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the folder **grades**. No grading comments will be generated or shown on the screen.
 
-    {
-      "config": {
-        // May setup multiple coonfigurations to run one by one
-        "0": {
-          "assignment_title": "example_assignment_c",  // The title of the homework to be graded
-          "roster_path": "example_roster.csv",         // The file name of the student roster
-          "tests_list": "example_test_list.csv",       // The file name of the test list
-          "command": "gcc",                            // Compile command with flags
-          "source_files": "homework.c homework.h",     // The file name of source files to be graded
-          "grader_test_file": "grading_tests.c",       // The file name of the grading tests
-          "student_test_file": "main.c",               // The file name of the student' own tests
-          "grader_target": "grader",                   // The output target of the grading tests
-          "student_target": "student",                 // The output target of the student' own tests
-          "timeout": 30,                               // Timeout in second
-          "memory_leak_test_id": [                     // The ids of grading tests to check memory leak
-            1,
-            4
-          ]
-        }
-      }
-    }
+### Grade for a single student:
 
-### Usage
+- Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen.
 
-If we use *example-assignment-c* attached as an example, here are the available operations as follows.
+    	./barreleye.sh -i 1
 
-#### Grade for all students together without memory-leak examinations:
+- For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen.
 
-Locating at the top level of the grading folder, run
+	    ./barreleye.sh -i 1 -t
 
-    ./grade.sh
+- For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen.
 
-The total score for each student will be shown on the screen. The detailed scores will be recorded into *grades.csv*. No grading comments will be generated or shown.
-
-#### Grade for a single student with both tests and memory-leak examinations:
-
-For grading a student whose id is 6 in the *roster.csv*, locate at the top level of the grading folder and run
-
-    ./grade.sh 6
-
-The detailed scores, grading comments, and Valgrind output will be shown on the screen.
-
-#### Grade for a single student with tests only but not memory-leak examinations:
-
-For grading a student whose id is 6 in the *roster.csv*, locate at the top level of the grading folder and run
-
-    ./grade.sh 6 -t
-
-The detailed scores and grading comments will be shown on the screen.
-
-#### Grade for a single student with memory-leak examinations only but not tests:
-
-For grading a student whose id is 6 in the *roster.csv*, locate at the top level of the grading folder and run
-
-    ./grade.sh 6 -m
-
-The Valgrind output will be shown on the screen.
+	    ./barreleye.sh -i 1 -m

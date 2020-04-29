@@ -1,16 +1,16 @@
 {
   "config": {
     "0": {
-      "assignment_title": "example_assignment_c",
-      "roster_path": "example_roster.csv",
-      "tests_list": "example_test_list.csv",
+      "homework_title": "example-homework-c",
+      "roster_file": "example_roster.csv",
+      "tests_list_file": "example_test_list.csv",
       "command": "gcc",
       "source_files": "homework.c homework.h",
-      "grader_test_file": "grading_tests.c",
+      "grader_test_file": "example_grading_tests.c",
       "student_test_file": "main.c",
       "grader_target": "grader",
       "student_target": "student",
-      "timeout": 30,
+      "timeout": 10,
       "memory_leak_test_id": [
         1,
         4

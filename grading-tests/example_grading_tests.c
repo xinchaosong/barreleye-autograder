@@ -4,8 +4,9 @@
  * Copyright © 2020 Xinchao Song. All rights reserved.              *
 *********************************************************************/
 
-#include "homework.hpp"
-#include <iostream>
+#include "homework.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #define TEST_RESULT _test_result
 #define TEST_INIT int TEST_RESULT = 1
@@ -15,8 +16,7 @@
 int test_func_normal() {
     TEST_INIT;
 
-    Homework hw;
-    TEST_ASSERT(0 == hw.func_normal());
+    TEST_ASSERT(0 == func_normal());
 
     return TEST_RESULT;
 }
@@ -25,8 +25,7 @@ int test_func_normal() {
 int test_func_error() {
     TEST_INIT;
 
-    Homework hw;
-    TEST_ASSERT(0 == hw.func_error());
+    TEST_ASSERT(0 == func_error());
 
     return TEST_RESULT;
 }
@@ -35,8 +34,7 @@ int test_func_error() {
 int test_func_timeout() {
     TEST_INIT;
 
-    Homework hw;
-    TEST_ASSERT(0 == hw.func_timeout());
+    TEST_ASSERT(0 == func_timeout());
 
     return TEST_RESULT;
 }
@@ -45,8 +43,7 @@ int test_func_timeout() {
 int test_func_leak() {
     TEST_INIT;
 
-    Homework hw;
-    TEST_ASSERT(0 == hw.func_leak());
+    TEST_ASSERT(0 == func_leak());
 
     return TEST_RESULT;
 }
@@ -75,21 +72,16 @@ int main(int argc, const char *argv[]) {
     int test_id = 0;
 
     if (argc == 2) {
-        try {
-            test_id = std::stoi(argv[1]);
-        } catch (std::exception &e) {
-            std::cerr << "The argument received is not a integer." << std::endl;
-            exit(1);
-        }
+        test_id = atoi(argv[1]);
     }
     if (argc > 2) {
-        std::cerr << "Too many arguments." << std::endl;
+        printf("Too many arguments.\n");
         exit(1);
     }
 
     switch (test_id) {
         case 0:
-            printf("Example Assignment C++\n");
+            printf("Example homework C++\n");
             printf("Auto grading...\n\n");
 
             score += unit_test_ptf(&test_func_normal,
@@ -125,7 +117,7 @@ int main(int argc, const char *argv[]) {
             break;
 
         default:
-            std::cerr << "Invalid test id." << std::endl;
+            printf("Invalid test id.\n");
             exit(1);
     }
 
