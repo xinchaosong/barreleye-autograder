@@ -8,6 +8,7 @@ import argparse
 import json
 import subprocess
 
+from scripts import path
 from scripts import util
 
 MAX_TRIAL = 3
@@ -15,19 +16,20 @@ g_ssh_key_path = ""
 
 
 def load_config():
-    with open("../config/git_config.json", 'r') as load_f:
+    git_config_path = path.config_path / 'git_config.json'
+    with open(git_config_path, 'r') as load_f:
         load_dict = json.load(load_f)
 
     return load_dict['git_config']
 
 
-def git_clone(folder_name, git_ssh):
+def git_clone(folder_path, git_ssh):
     command = "eval `ssh-agent -s` " \
               "&& ssh-add %s " \
               "&& mkdir %s " \
               "&& cd %s " \
               "&& git clone %s" \
-              % (g_ssh_key_path, folder_name, folder_name, git_ssh)
+              % (g_ssh_key_path, folder_path, folder_path, git_ssh)
 
     return subprocess.call(command, shell=True)
 
@@ -43,18 +45,15 @@ def git_pull(repo_path):
     return subprocess.call(command, shell=True)
 
 
-def del_folder(folder_name):
-    subprocess.call("rm -rf %s" % folder_name, shell=True)
-
-
-def pull_repo(student_info, is_all=True):
+def pull_once(student_info, is_all=True):
     trial = 0
     last_name = student_info['last_name'].lower()
     first_name = student_info['first_name'].lower()
     git_ssh = student_info['git_ssh']
     repo_name = student_info['repo_name']
     folder_name = last_name + '_' + first_name
-    repo_path = folder_name + '/' + repo_name
+    folder_path = path.homework_path / folder_name
+    repo_path = folder_path / repo_name
 
     print(first_name + " " + last_name + ":")
 
@@ -64,12 +63,12 @@ def pull_repo(student_info, is_all=True):
 
     print("Failed to pull the repo of this student.")
     print("Trying to re-clone it...")
-    del_folder(folder_name)
+    util.del_folder(folder_path)
 
-    while (git_clone(folder_name, git_ssh) != 0) and (trial < MAX_TRIAL):
+    while (git_clone(folder_path, git_ssh) != 0) and (trial < MAX_TRIAL):
         print("Failed to clone the repo of this student.")
         print("Re-cloning...")
-        del_folder(folder_name)
+        util.del_folder(folder_path)
         trial += 1
 
     if trial >= 3 and is_all:
@@ -86,18 +85,19 @@ def pull_repo(student_info, is_all=True):
     print()
 
 
-def repopull(sid):
+def pull(sid):
     global g_ssh_key_path
 
     git_config = load_config()
     g_ssh_key_path = git_config['ssh_key_path']
-    roster = util.load_csv(git_config['roster_path'])
+    roster_path = path.rosters_path / git_config['roster_file']
+    roster = util.load_csv(roster_path)
 
     if sid is None:
         for i_student in roster.values():
-            pull_repo(student_info=i_student)
+            pull_once(student_info=i_student)
     else:
-        pull_repo(student_info=roster[sid], is_all=False)
+        pull_once(student_info=roster[sid], is_all=False)
 
 
 if __name__ == "__main__":
@@ -105,4 +105,4 @@ if __name__ == "__main__":
     m_parser.add_argument('-i', '-id')
     m_args = m_parser.parse_args()
 
-    repopull(sid=m_args.i)
+    pull(sid=m_args.i)
