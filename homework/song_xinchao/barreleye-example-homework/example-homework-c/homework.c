@@ -24,7 +24,7 @@ int func_normal() {
 int func_error() {
     printf("A function with segmentation fault.\n");
 
-    int *p = 0;
+    int *p = NULL;
     *p = 5;
     return 0;
 }

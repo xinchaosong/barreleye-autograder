@@ -48,23 +48,71 @@ int test_func_leak() {
     return TEST_RESULT;
 }
 
-double unit_test(int (*fun_ptr)(), double pts) {
-    return fun_ptr() * pts;
-}
-
-double unit_test_ptf(int (*fun_ptr)(), double pts, const char *title) {
+double unit_test(int (*fun_ptr)(), double pts, const char *title) {
     double score = fun_ptr() * pts;
 
-    printf("Test case %s: ", title);
-    printf("%.2f / %.2f", score, pts);
+    if (title != NULL) {
+        printf("Test case %s: ", title);
+        printf("%.2f / %.2f", score, pts);
 
-    if (score == 0) {
-        printf("  ##FAIL##");
+        if (score == 0) {
+            printf("  ##FAIL##");
+        }
+
+        printf("\n");
     }
 
-    printf("\n");
-
     return score;
+}
+
+void run_tests(int test_id) {
+    double score = 0;
+
+    switch (test_id) {
+        case 0:
+            printf("Example Assignment C\n");
+            printf("Auto grading...\n\n");
+
+            score += unit_test(&test_func_normal,
+                               25.0,
+                               "#1 test_func_normal");
+            score += unit_test(&test_func_error,
+                               25.0,
+                               "#2 test_func_error");
+            score += unit_test(&test_func_timeout,
+                               25.0,
+                               "#3 test_func_timeout");
+            score += unit_test(&test_func_leak,
+                               25.0,
+                               "#4 test_func_leak");
+
+            printf("\nTotal grade: %.2f\n", score);
+            break;
+
+        case 1:
+            score = unit_test(&test_func_normal, 25.0, NULL);
+            break;
+
+        case 2:
+            score = unit_test(&test_func_error, 25.0, NULL);
+            break;
+
+        case 3:
+            score = unit_test(&test_func_timeout, 25.0, NULL);
+            break;
+
+        case 4:
+            score = unit_test(&test_func_leak, 25.0, NULL);
+            break;
+
+        default:
+            printf("Invalid test id.\n");
+            exit(1);
+    }
+
+    if (test_id != 0) {
+        printf("Score: %.2f\n", score);
+    }
 }
 
 int main(int argc, const char *argv[]) {
@@ -79,51 +127,7 @@ int main(int argc, const char *argv[]) {
         exit(1);
     }
 
-    switch (test_id) {
-        case 0:
-            printf("Example homework C++\n");
-            printf("Auto grading...\n\n");
-
-            score += unit_test_ptf(&test_func_normal,
-                                   25.0,
-                                   "#1 test_func_normal");
-            score += unit_test_ptf(&test_func_error,
-                                   25.0,
-                                   "#2 test_func_error");
-            score += unit_test_ptf(&test_func_timeout,
-                                   25.0,
-                                   "#3 test_func_timeout");
-            score += unit_test_ptf(&test_func_leak,
-                                   25.0,
-                                   "#4 test_func_leak");
-
-            printf("\nTotal grade: %.2f\n", score);
-            break;
-
-        case 1:
-            score = unit_test(&test_func_normal, 25.0);
-            break;
-
-        case 2:
-            score = unit_test(&test_func_error, 25.0);
-            break;
-
-        case 3:
-            score = unit_test(&test_func_timeout, 25.0);
-            break;
-
-        case 4:
-            score = unit_test(&test_func_leak, 25.0);
-            break;
-
-        default:
-            printf("Invalid test id.\n");
-            exit(1);
-    }
-
-    if (test_id != 0) {
-        printf("Score: %.2f\n", score);
-    }
+    run_tests(test_id);
 
     return 0;
 }
