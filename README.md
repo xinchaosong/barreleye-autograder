@@ -18,7 +18,7 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ## Preparation
 
-### Download Barreleye Autograder
+### Download the Barreleye Autograder
 
 	git clone git@github.com:xinchaosong/barreleye-autograder.git
 
