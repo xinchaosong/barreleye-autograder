@@ -8,6 +8,7 @@ This repository is a simple autograder for the computer science courses using Gi
 
 This autograder has been used for the following courses at Northeastern University, Boston:
 
+- CS 5006: Algorithms, Summer 2020
 - CS 3520: Programming in C++, Spring 2020
  
 ## Environment Requirements
@@ -16,7 +17,11 @@ This autograder has been used for the following courses at Northeastern Universi
 - Python >= 3.7 (or 3.6 under CPython)
 - Valgrind installed
 
-## Preparation 
+## Preparation
+
+### Download the Barreleye Autograder
+
+	git clone git@github.com:xinchaosong/barreleye-autograder.git
 
 ### Before cloning/pulling the repository of students:
 
