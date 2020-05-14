@@ -35,24 +35,25 @@ This autograder has been used for the following courses at Northeastern Universi
 
 1. Under the folder **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the folder structures of all students and modify anything wrong back to the standard way.
 2. Under the folder **rosters**, fill all information of students into *roster.csv*.
-3. Under the folder **grading-tests**, make a proper test file *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
+3. Under the folder **grading-tests**, make a folder named by the homework title and put all test files such as *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
 5. Under the folder **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below.
 
 		{
 	      "config": {
 	        // May setup multiple coonfigurations to run one by one
 	        "0": {
-	          "homework_title": "example-homework-c",      // The title of the homework to be graded
-	          "roster_file": "example_roster.csv",         // The file name of the student roster
-	          "tests_list_file": "example_test_list.csv",  // The file name of the test list
-	          "command": "gcc",                            // Compile command with flags
-	          "source_files": "homework.c homework.h",     // The file name of source files to be graded
-	          "grader_test_files": "grading_tests.c",       // The file name of the grading tests
-	          "student_test_file": "main.c",               // The file name of the student' own tests
-	          "grader_target": "grader",                   // The output target of the grading tests
-	          "student_target": "student",                 // The output target of the student' own tests
-	          "timeout": 30,                               // Timeout in second
-	          "memory_leak_test_id": [                     // The ids of grading tests to check memory leak
+	          "homework_title": "example-homework-c",          // The title of the homework to be graded
+	          "roster_file": "example_roster.csv",             // The file name of the student roster
+	          "tests_list_file": "example_test_list.csv",      // The file name of the test list
+	          "grader_test_files": "example_grading_tests.c",  // All grading tests files used
+	          "grader_compile_command": "gcc example_grading_tests.c homework.c -o grader",  
+	                                                           // The command to compile the grading tests
+	          "student_compile_command": "gcc main.c homework.c -o student",     
+	                                                           // The command to compile the student' own tests
+	          "grader_target": "grader",                       // The output target of the grading tests
+	          "student_target": "student",                     // The output target of the student' own tests
+	          "timeout": 10,                                   // Timeout in second
+	          "memory_leak_test_id": [                         // The ids of grading tests to check memory leak
 	            1,
 	            4
 	          ]
@@ -60,7 +61,7 @@ This autograder has been used for the following courses at Northeastern Universi
 	      }
 	    }
 
-**Note:** *roster.csv*, *grading\_tests.c*, or *test\_list.csv* can be any name provided that the new name matches the grading configuration in *git\_config.json*
+**Note:** *roster.csv*, *grading\_tests.c*, or *test\_list.csv* can be any name provided that the their name matches the grading configuration in *git\_config.json*
 
 ## Usage
 
