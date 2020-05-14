@@ -9,6 +9,7 @@ This repository is a simple autograder for the computer science courses using Gi
 This autograder has been used for the following courses at Northeastern University, Boston:
 
 - CS 3520: Programming in C++, Spring 2020
+- CS 5006: Algorithms, Summer 2020
  
 ## Environment Requirements
 
