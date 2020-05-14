@@ -179,12 +179,12 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
 def grade(sid, run_test, check_leak):
     configs = load_config()
 
-    for i_config in configs.values():
+    for i_cdx, i_config in configs.items():
         roster = util.load_csv(path.rosters_path / i_config['roster_file'])
         homework_title = i_config['homework_title']
         test_list = util.load_csv(path.tests_path / homework_title / i_config['tests_list_file'])
 
-        print("\n########## %s Grading ########## \n" % homework_title.capitalize())
+        print("\n########## %s %s Grading ########## \n" % (homework_title.capitalize(), i_cdx.capitalize()))
 
         if sid is None:
             for i_student in roster.values():
