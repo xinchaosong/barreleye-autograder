@@ -30,28 +30,28 @@ def save_grades(csv_path, roster):
         writer.writerows(roster.values())
 
 
-def generate_compiling_cnd(config):
-    gcc_cmd = config['command']
-    source_files = config['source_files']
-    grader_test_file = config['grader_test_file']
-    student_test_file = config['student_test_file']
-    grader_target = config['grader_target']
-    student_target = config['student_target']
-
-    grader_gcc_cmd = gcc_cmd + " " + grader_test_file + " " + source_files + " -o " + grader_target
-    student_gcc_cmd = gcc_cmd + " " + student_test_file + " " + source_files + " -o " + student_target
-
-    return grader_gcc_cmd, student_gcc_cmd
-
-
 def clean(config, homework_path):
-    grader_test_file = config['grader_test_file']
+    grader_test_files = config['grader_test_files'].split(',')
     grader_target = config['grader_target']
     student_target = config['student_target']
 
-    util.del_file(homework_path / grader_test_file)
     util.del_file(homework_path / grader_target)
     util.del_file(homework_path / student_target)
+
+    for file in grader_test_files:
+        util.del_file(homework_path / file)
+
+
+def copy_grader_files(config, test_path, homework_path):
+    grader_test_files = config['grader_test_files'].split(',')
+
+    for file in grader_test_files:
+        success = util.copy_file(test_path / file, homework_path / file)
+
+        if not success:
+            return False
+
+    return True
 
 
 def grade_single(config, student_info, test_list, run_test, check_leak, show_details=True):
@@ -63,33 +63,35 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
 
     folder_path = path.homework_path / folder_name
     homework_path = folder_path / homework_title
-    test_path = path.tests_path / config['grader_test_file']
+    test_path = path.tests_path / homework_title
 
-    grader_gcc_cmd, student_gcc_cmd = generate_compiling_cnd(config)
+    grader_gcc_cmd = config['grader_compile_command']
+    student_gcc_cmd = config['student_compile_command']
     total_grade = 0
     grading_comment = ""
     all_grades = {i_tid: 0 for i_tid in test_list}
     all_grades['total'] = 0
 
-    print(first_name + " " + last_name + ":")
+    print(first_name + " " + last_name + ":\n")
 
+    # Copies all grader files.
+    copy_success = copy_grader_files(config, test_path, homework_path)
+    if not copy_success:
+        print("ERROR: fail to copy the grader files.\n")
+        clean(config, homework_path)
+        return all_grades
+
+    # Runs grader tests.
     if run_test:
         score_deducted = 0
-        command = None
 
         try:
-            command = "cp %s %s " \
-                      "&& cd %s " \
-                      "&& %s " \
-                      % (test_path, homework_path / config['grader_test_file'],
-                         homework_path,
-                         grader_gcc_cmd)
-            subprocess.check_output(command, shell=True)
-
+            command = "cd %s " \
+                      "&& %s " % (homework_path, grader_gcc_cmd)
+            subprocess.call(command, shell=True)
         except subprocess.CalledProcessError:
-            print("cp fails: %s\n" % command)
+            print("ERROR: compilation fails.\n")
             clean(config, homework_path)
-
             return all_grades
 
         for i_tid, i_value in test_list.items():
@@ -132,9 +134,9 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
 
         print()
 
+    # Runs the memory leak examinations.
     if check_leak:
-        if show_details:
-            print("Memory leak examination: the student's unit tests\n")
+        print("Memory leak examination: the student's unit tests\n")
 
         try:
             command = "cd %s " \
@@ -142,35 +144,32 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
             subprocess.call(command, shell=True)
 
             exe_path = str(homework_path / config['student_target'])
-            command = ["valgrind", "--log-fd=1", exe_path]
-            subprocess.call(command, shell=False, timeout=config['timeout'])
+            command = ["valgrind", exe_path, "> /dev/null"]
+            subprocess.call(command, shell=False, stdout=subprocess.DEVNULL, timeout=config['timeout'])
 
-        except subprocess.CalledProcessError:
-            print("Memory leak examination: ERROR\n")
+        except subprocess.CalledProcessError as e:
+            print("Memory leak examination error: %s\n" % e)
             pass
 
-        if show_details:
-            print("\n")
+        print("\n")
 
         for i_tid in config['memory_leak_test_id']:
-            if show_details:
-                print("Memory leak check: grading test case #%d\n" % i_tid)
+            print("Memory leak examination: grading test case #%d\n" % i_tid)
 
             try:
                 command = "cd %s " \
                           "&& %s " % (homework_path, grader_gcc_cmd)
                 subprocess.call(command, shell=True)
 
-                exe_path = str(homework_path / config['student_target'])
-                command = ["valgrind", "--log-fd=1", exe_path, str(i_tid)]
-                subprocess.call(command, shell=False, timeout=config['timeout'])
+                exe_path = str(homework_path / config['grader_target'])
+                command = ["valgrind", exe_path, str(i_tid), "> /dev/null"]
+                subprocess.call(command, shell=False, stdout=subprocess.DEVNULL, timeout=config['timeout'])
 
-            except subprocess.CalledProcessError:
-                print("Memory leak examination: ERROR\n")
+            except subprocess.CalledProcessError as e:
+                print("Memory leak examination error: %s\n" % e)
                 pass
 
-            if show_details:
-                print("\n")
+            print("\n")
 
     clean(config, homework_path)
 
@@ -183,7 +182,7 @@ def grade(sid, run_test, check_leak):
     for i_config in configs.values():
         roster = util.load_csv(path.rosters_path / i_config['roster_file'])
         homework_title = i_config['homework_title']
-        test_list = util.load_csv(path.tests_path / i_config['tests_list_file'])
+        test_list = util.load_csv(path.tests_path / homework_title / i_config['tests_list_file'])
 
         print("\n########## %s Grading ########## \n" % homework_title.capitalize())
 

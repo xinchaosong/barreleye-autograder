@@ -47,7 +47,7 @@ This autograder has been used for the following courses at Northeastern Universi
 	          "tests_list_file": "example_test_list.csv",  // The file name of the test list
 	          "command": "gcc",                            // Compile command with flags
 	          "source_files": "homework.c homework.h",     // The file name of source files to be graded
-	          "grader_test_file": "grading_tests.c",       // The file name of the grading tests
+	          "grader_test_files": "grading_tests.c",       // The file name of the grading tests
 	          "student_test_file": "main.c",               // The file name of the student' own tests
 	          "grader_target": "grader",                   // The output target of the grading tests
 	          "student_target": "student",                 // The output target of the student' own tests

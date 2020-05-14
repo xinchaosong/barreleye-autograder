@@ -25,3 +25,16 @@ def del_file(file_path):
     file_path = Path(file_path)
     if file_path.exists():
         file_path.unlink()
+
+
+def copy_file(src, dst):
+    try:
+        shutil.copyfile(src, dst)
+        return True
+    except shutil.Error:
+        return False
+
+
+def read_file(file):
+    with open(file, 'r') as f:
+        return f.read()

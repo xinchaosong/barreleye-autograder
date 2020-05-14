@@ -4,4 +4,4 @@
 # April 21, 2020
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
-python3 -m "$PWD"/scripts "$@"
+python3 "$PWD"/scripts "$@"
