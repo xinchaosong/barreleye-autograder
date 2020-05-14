@@ -1,6 +1,6 @@
 # Barreleye Autograder
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/c/c0/Opisthoproctus_soleatus.png" width="200" alt="A barreleye fish">
+<img src="barreleye-autograder.jpg" width="200px" alt="A barreleye fish">
 
 ## Introduction
 
