@@ -16,7 +16,11 @@ This autograder has been used for the following courses at Northeastern Universi
 - Python >= 3.7 (or 3.6 under CPython)
 - Valgrind installed
 
-## Preparation 
+## Preparation
+
+### Download Barreleye Autograder
+
+	git clone git@github.com:xinchaosong/barreleye-autograder.git
 
 ### Before cloning/pulling the repository of students:
 
