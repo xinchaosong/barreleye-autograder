@@ -1,6 +1,6 @@
 # Barreleye Autograder
 
-<img src="barreleye-autograder.jpg" width="200px" alt="A barreleye fish">
+<img src="barreleye-autograder.jpg" width="250px" alt="A barreleye fish">
 
 ## Introduction
 
