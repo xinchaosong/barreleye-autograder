@@ -15,14 +15,21 @@ def load_csv(csv_path):
     return data_sheet
 
 
+def make_folder(folder_path):
+    folder_path = Path(folder_path)
+    folder_path.mkdir(parents=True, exist_ok=True)
+
+
 def del_folder(folder_path):
     folder_path = Path(folder_path)
+
     if folder_path.exists():
         shutil.rmtree(folder_path)
 
 
 def del_file(file_path):
     file_path = Path(file_path)
+
     if file_path.exists():
         file_path.unlink()
 

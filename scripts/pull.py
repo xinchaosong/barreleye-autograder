@@ -24,23 +24,25 @@ def load_config():
 
 
 def git_clone(folder_path, git_ssh):
-    command = "eval `ssh-agent -s` " \
+    util.make_folder(folder_path)
+    command = "cd %s " \
+              "&& eval `ssh-agent -s` " \
               "&& ssh-add %s " \
-              "&& mkdir %s " \
-              "&& cd %s " \
-              "&& git clone %s" \
-              % (g_ssh_key_path, folder_path, folder_path, git_ssh)
+              "&& git clone %s " \
+              "&& ssh-agent -k" \
+              % (folder_path, g_ssh_key_path, git_ssh)
 
     return subprocess.call(command, shell=True)
 
 
 def git_pull(repo_path):
-    command = "eval `ssh-agent -s` " \
+    command = "cd %s " \
+              "&& eval `ssh-agent -s` " \
               "&& ssh-add %s " \
-              "&& cd %s " \
               "&& git checkout . " \
-              "&& git pull" \
-              % (g_ssh_key_path, repo_path)
+              "&& git pull " \
+              "&& ssh-agent -k" \
+              % (repo_path, g_ssh_key_path)
 
     return subprocess.call(command, shell=True)
 
