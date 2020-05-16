@@ -3,7 +3,8 @@
     "0": {
       "homework_title": "example-homework-c",
       "roster_file": "example_roster.csv",
-      "tests_list_file": "example_test_list.csv",
+      "test_files_path": "example-homework-c",
+      "tests_list_file": "example_tests_list.csv",
       "grader_test_files": "example_grading_tests.c",
       "grader_compile_command": "gcc example_grading_tests.c homework.c homework.h -o grader",
       "student_compile_command": "gcc main.c homework.c homework.h -o student",

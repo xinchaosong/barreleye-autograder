@@ -63,7 +63,7 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
 
     folder_path = path.homework_path / folder_name
     homework_path = folder_path / homework_title
-    test_path = path.tests_path / homework_title
+    tests_path = path.tests_path / config['test_files_path']
 
     grader_gcc_cmd = config['grader_compile_command']
     student_gcc_cmd = config['student_compile_command']
@@ -75,11 +75,18 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
     print(first_name + " " + last_name + ":\n")
 
     # Copies all grader files.
-    copy_success = copy_grader_files(config, test_path, homework_path)
+    copy_success = copy_grader_files(config, tests_path, homework_path)
     if not copy_success:
         print("ERROR: fail to copy the grader files.\n")
         clean(config, homework_path)
         return all_grades
+
+    if show_details:
+        stdout = None
+        stderr = None
+    else:
+        stdout = subprocess.DEVNULL
+        stderr = subprocess.DEVNULL
 
     # Runs grader tests.
     if run_test:
@@ -88,7 +95,8 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
         try:
             command = "cd %s " \
                       "&& %s " % (homework_path, grader_gcc_cmd)
-            subprocess.call(command, shell=True)
+            subprocess.call(command, stdout=stdout, stderr=stderr, shell=True)
+
         except Exception as e:
             print("ERROR: compilation fails.\n")
             clean(config, homework_path)
@@ -98,7 +106,8 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
             try:
                 command = str(homework_path / config['grader_target'])
 
-                score_output = subprocess.check_output([command, i_tid], shell=False, timeout=config['timeout'])
+                score_output = subprocess.check_output([command, i_tid], stderr=stderr, shell=False,
+                                                       timeout=config['timeout'])
                 score_output = score_output.decode().splitlines()
 
                 if score_output[-1].startswith("Score:"):
@@ -182,7 +191,8 @@ def grade(sid, run_test, check_leak):
     for i_cdx, i_config in configs.items():
         roster = util.load_csv(path.rosters_path / i_config['roster_file'])
         homework_title = i_config['homework_title']
-        test_list = util.load_csv(path.tests_path / homework_title / i_config['tests_list_file'])
+        tests_path = path.tests_path / i_config['test_files_path']
+        test_list = util.load_csv(tests_path / i_config['tests_list_file'])
 
         print("\n########## %s %s Grading ########## \n" % (homework_title.capitalize(), i_cdx.capitalize()))
 
@@ -193,7 +203,7 @@ def grade(sid, run_test, check_leak):
                 i_student.update(all_grades)
 
             path.grades_path.mkdir(exist_ok=True)
-            csv_name = i_config['homework_title'] + "_grades.csv"
+            csv_name = i_config['homework_title'] + "_" + i_cdx + "_grades.csv"
             save_grades(path.grades_path / csv_name, roster=roster)
 
         else:

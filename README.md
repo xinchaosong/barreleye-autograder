@@ -4,7 +4,7 @@
 
 ## Introduction
 
-This repository is a simple autograder for the computer science courses using GitHub to submit C/C++ programming homework. It can automatically clone/pull and grade the repositories of all students in a class using the instructor-made configurations and grading tests. All work can be done under the current folder structure of this repository so that the instructor does not need to copy or move any files manually.
+This repository is a simple autograder for the computer science courses using GitHub to submit C/C++ programming homework. It can automatically clone/pull and grade the repositories of all students in a class using the instructor-made configurations and grading tests. All work can be done under the current directory structure of this repository so that the instructor does not need to copy or move any files manually.
 
 This autograder has been used for the following courses at Northeastern University, Boston:
 
@@ -26,8 +26,8 @@ This autograder has been used for the following courses at Northeastern Universi
 ### Before cloning/pulling the repository of students:
 
 1. Make sure the current terminal can access to GitHub through SSH.
-2. Under the folder **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
-3. Under the folder **config**, modify the git configuration in *git\_config.json* properly. An example is shown below.
+2. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
+3. Under the directory **config**, modify the git configuration in *git\_config.json* properly. An example is shown below.
 
 	    {
 	      "git_config": {
@@ -38,10 +38,10 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ### Before running the grading script:
 
-1. Under the folder **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the folder structures of all students and modify anything wrong back to the standard way.
-2. Under the folder **rosters**, fill all information of students into *roster.csv*.
-3. Under the folder **grading-tests**, make a folder named by the homework title and put all test files such as *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
-5. Under the folder **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below.
+1. Under the directory **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the directory structures of all students and modify anything wrong back to the standard way.
+2. Under the directory **rosters**, fill all information of students into *roster.csv*.
+3. Under the directory **grading-tests**, make a folder named by the homework title and put all test files such as *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
+5. Under the directory **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below.
 
 		{
 	      "config": {
@@ -49,7 +49,9 @@ This autograder has been used for the following courses at Northeastern Universi
 	        "0": {
 	          "homework_title": "example-homework-c",          // The title of the homework to be graded
 	          "roster_file": "example_roster.csv",             // The file name of the student roster
-	          "tests_list_file": "example_test_list.csv",      // The file name of the test list
+              "test_files_path": "example-homework-c",         // The relative path to the folder that contains
+                                                               // all tests under the grading-tests directory
+	          "tests_list_file": "example_tests_list.csv",     // The file name of the test list
 	          "grader_test_files": "example_grading_tests.c",  // All grading tests files used
 	          "grader_compile_command": "gcc example_grading_tests.c homework.c -o grader",  
 	                                                           // The command to compile the grading tests
@@ -70,7 +72,7 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ## Usage
 
-If we use the example homework *example-homework-c* attached under the folder **homework** as an example, here are the available operations as follows.
+If we use the example homework *example-homework-c* attached under the directory **homework** as an example, here are the available operations as follows.
 
 ### Clone/Pull all students' repositories:
 
@@ -88,7 +90,7 @@ For grading a student whose id is 1 in the *roster.csv*, use the following comma
 
     ./barreleye.sh
 
-The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the folder **grades**. No grading comments will be generated or shown on the screen.
+The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen.
 
 ### Grade for a single student:
 
