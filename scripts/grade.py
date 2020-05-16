@@ -89,7 +89,7 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
             command = "cd %s " \
                       "&& %s " % (homework_path, grader_gcc_cmd)
             subprocess.call(command, shell=True)
-        except subprocess.CalledProcessError:
+        except Exception as e:
             print("ERROR: compilation fails.\n")
             clean(config, homework_path)
             return all_grades
@@ -107,7 +107,7 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
                 else:
                     score = 0
 
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as e:
+            except Exception as e:
                 score = 0
 
             if score == 0:
@@ -147,7 +147,7 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
             command = ["valgrind", exe_path, "> /dev/null"]
             subprocess.call(command, shell=False, stdout=subprocess.DEVNULL, timeout=config['timeout'])
 
-        except subprocess.CalledProcessError as e:
+        except Exception as e:
             print("Memory leak examination error: %s\n" % e)
             pass
 
@@ -165,7 +165,7 @@ def grade_single(config, student_info, test_list, run_test, check_leak, show_det
                 command = ["valgrind", exe_path, str(i_tid), "> /dev/null"]
                 subprocess.call(command, shell=False, stdout=subprocess.DEVNULL, timeout=config['timeout'])
 
-            except subprocess.CalledProcessError as e:
+            except Exception as e:
                 print("Memory leak examination error: %s\n" % e)
                 pass
 

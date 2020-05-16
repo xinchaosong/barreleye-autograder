@@ -38,7 +38,7 @@ def copy_file(src, dst):
     try:
         shutil.copyfile(src, dst)
         return True
-    except shutil.Error:
+    except Exception as e:
         return False
 
 
