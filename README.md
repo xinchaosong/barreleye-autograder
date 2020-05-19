@@ -46,7 +46,7 @@ This autograder has been used for the following courses at Northeastern Universi
 		{
 	      "config": {
 	        // May setup multiple coonfigurations to run one by one
-	        "0": {
+	        "All": {
 	          "homework_title": "example-homework-c",          // The title of the homework to be graded
 	          "roster_file": "example_roster.csv",             // The file name of the student roster
               "test_files_path": "example-homework-c",         // The relative path to the folder that contains
