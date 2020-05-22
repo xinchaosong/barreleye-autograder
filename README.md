@@ -10,6 +10,14 @@ This autograder has been used for the following courses at Northeastern Universi
 
 - CS 5006: Algorithms, Summer 2020
 - CS 3520: Programming in C++, Spring 2020
+
+## Features
+
+- Automatically downloading student's repositories
+- Automatically running the instructor-made tests
+- Batch grading and automatically generating grading sheet
+- Able to handle tests crash and timeout issues
+- Customized configurations to fit different needs
  
 ## Environment Requirements
 
