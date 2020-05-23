@@ -26,4 +26,4 @@ if __name__ == '__main__':
     if m_args.p:
         pull(sid=m_args.i)
     else:
-        grade(sid=m_args.i, run_test=m_args.m, check_leak=m_args.t)
+        grade(sid=m_args.i, check_tests=m_args.m, check_leak=m_args.t)
