@@ -126,7 +126,6 @@ def copy_grader_files(config, test_path, homework_path):
 
 def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, all_grades, logger, timeout,
                       show_details=False):
-
     stdout = None if show_details else subprocess.DEVNULL
     stderr = None if show_details else subprocess.DEVNULL
 
@@ -149,8 +148,11 @@ def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, a
     # Runs all tests
     for i_tid, i_value in test_list.items():
         try:
-            command = str(homework_path / grader_target)
-            score_output = subprocess.check_output([command, i_tid], stderr=stderr, shell=False,
+            # The heap consistency checking level is set to 2 so that any test causing memory
+            # heap corruption will simply abort without outputting too many error messages.
+            command = "export MALLOC_CHECK_=2 && " \
+                      "%s %s" % (str(homework_path / grader_target), i_tid)
+            score_output = subprocess.check_output(command, stderr=stderr, shell=True,
                                                    timeout=timeout).decode().splitlines()
 
             if score_output[-1].startswith("Score:"):
@@ -159,7 +161,7 @@ def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, a
             else:
                 score = 0
 
-        except Exception:
+        except Exception as e:
             score = 0
 
         if score == 0:
@@ -194,7 +196,6 @@ def compile_code(homework_path, grader_gcc_cmd, stdout=None, stderr=None):
 
 def run_memory_exam(homework_path, student_gcc_cmd, student_target, grader_gcc_cmd, grader_target,
                     memory_leak_test_ids, logger, timeout, show_details=False):
-
     stdout = None if show_details else subprocess.DEVNULL
     stderr = None if show_details else subprocess.DEVNULL
 
