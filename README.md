@@ -13,9 +13,9 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ## Features
 
-- Automatically downloading student's repositories
-- Automatically running the instructor-made tests
-- Batch grading and automatically generating grading sheet
+- Downloading all student's repositories automatically
+- Running the instructor-made tests for all students automatically
+- Batch grading and automatically generating grading sheet and grading reports
 - Able to handle tests crash and timeout issues
 - Customized configurations to fit different needs
  
@@ -98,18 +98,18 @@ For grading a student whose id is 1 in the *roster.csv*, use the following comma
 
     ./barreleye.sh
 
-The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen.
+The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen. A grading report recording all details will be generate for each student under the student's directory for the given homework graded.
 
 ### Grade for a single student:
 
-- Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen.
+- Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
 
     	./barreleye.sh -i 1
 
-- For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen.
+- For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
 
 	    ./barreleye.sh -i 1 -t
 
-- For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen.
+- For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
 
 	    ./barreleye.sh -i 1 -m
