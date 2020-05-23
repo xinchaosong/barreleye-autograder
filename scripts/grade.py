@@ -126,6 +126,7 @@ def copy_grader_files(config, test_path, homework_path):
 
 def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, all_grades, logger, timeout,
                       show_details=False):
+
     stdout = None if show_details else subprocess.DEVNULL
     stderr = None if show_details else subprocess.DEVNULL
 
@@ -148,9 +149,8 @@ def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, a
     # Runs all tests
     for i_tid, i_value in test_list.items():
         try:
-            command = "export MALLOC_CHECK_=0 && " \
-                      "%s %s" % (str(homework_path / grader_target), i_tid)
-            score_output = subprocess.check_output(command, stderr=stderr, shell=False,
+            command = str(homework_path / grader_target)
+            score_output = subprocess.check_output([command, i_tid], stderr=stderr, shell=False,
                                                    timeout=timeout).decode().splitlines()
 
             if score_output[-1].startswith("Score:"):
@@ -194,6 +194,7 @@ def compile_code(homework_path, grader_gcc_cmd, stdout=None, stderr=None):
 
 def run_memory_exam(homework_path, student_gcc_cmd, student_target, grader_gcc_cmd, grader_target,
                     memory_leak_test_ids, logger, timeout, show_details=False):
+
     stdout = None if show_details else subprocess.DEVNULL
     stderr = None if show_details else subprocess.DEVNULL
 
