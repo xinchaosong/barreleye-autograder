@@ -58,7 +58,7 @@ def grade_single(config_id, config, student_info, test_list, check_tests, check_
     folder_path = path.homework_path / folder_name
     homework_path = folder_path / homework_title
     tests_path = path.tests_path / config['test_files_path']
-    log_path = homework_path / ("grading_log_%s.txt" % config_id.lower())
+    log_path = homework_path / ("grading_report_%s.txt" % config_id.lower())
 
     grader_gcc_cmd = config['grader_compile_command']
     student_gcc_cmd = config['student_compile_command']
