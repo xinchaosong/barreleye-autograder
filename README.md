@@ -35,7 +35,7 @@ This autograder has been used for the following courses at Northeastern Universi
 
 1. Make sure the current terminal can access to GitHub through SSH using a SSH key with no passphrase. If you are not familar with connecting to GitHub with SSH, please follow [this tutorial](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) from GitHub. 
 2. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
-3. Under the directory **config**, modify the git configuration in *git\_config.json* properly. An example is shown below.
+3. Under the directory **config**, modify the git configuration in *git\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux.
 
 	    {
 	      "git_config": {
@@ -49,7 +49,7 @@ This autograder has been used for the following courses at Northeastern Universi
 1. Under the directory **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the directory structures of all students and modify anything wrong back to the standard way.
 2. Under the directory **rosters**, fill all information of students into *roster.csv*.
 3. Under the directory **grading-tests**, make a folder named by the homework title and put all test files such as *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
-5. Under the directory **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below.
+5. Under the directory **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux.
 
 		{
 	      "config": {
