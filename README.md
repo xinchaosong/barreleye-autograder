@@ -33,7 +33,7 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ### Before cloning/pulling the repository of students:
 
-1. Make sure the current terminal can access to GitHub through SSH using a SSH key with no passphrase. IF you are not familar with how to do it, please follow [this tutorial](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) from GitHub. 
+1. Make sure the current terminal can access to GitHub through SSH using a SSH key with no passphrase. If you are not familar with connecting to GitHub with SSH, please follow [this tutorial](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) from GitHub. 
 2. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
 3. Under the directory **config**, modify the git configuration in *git\_config.json* properly. An example is shown below.
 
