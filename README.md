@@ -21,7 +21,7 @@ This autograder has been used for the following courses at Northeastern Universi
  
 ## Environment Requirements
 
-- Linux or macOS
+- Linux
 - Python >= 3.7 (or 3.6 under CPython)
 - Valgrind installed
 
