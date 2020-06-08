@@ -171,7 +171,7 @@ def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, a
         total_grade += score
         all_grades[i_tid] = score
 
-        logger.log("Test case #%s: %f" % (i_tid, score), to_stdout=show_details)
+        logger.log("Test case #%s: %.2f" % (i_tid, score), to_stdout=show_details)
 
     # Summarization
     all_grades['total'] = total_grade
