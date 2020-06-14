@@ -267,9 +267,9 @@ def save_grades(csv_path, roster):
 
 if __name__ == "__main__":
     m_parser = argparse.ArgumentParser()
-    m_parser.add_argument('-i', '-id')
+    m_parser.add_argument('-i', '--id', help='grade a particular assignment with the given student id')
     m_parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
     m_parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
     m_args = m_parser.parse_args()
 
-    grade(sid=m_args.i, check_tests=m_args.m, check_leak=m_args.t)
+    grade(sid=m_args.id, check_tests=m_args.m, check_leak=m_args.t)
