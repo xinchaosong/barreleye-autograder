@@ -6,13 +6,29 @@
 
 import argparse
 import json
-import subprocess
 
+from scripts import git_tools
 from scripts import path
 from scripts import util
 
 MAX_TRIAL = 3
-g_ssh_key_path = ""
+
+
+def pull(sid, https=False):
+    git_config = load_config()
+    git_tools.ssh_key_path = git_config['ssh_key_path']
+    roster_path = path.rosters_path / git_config['roster_file']
+    roster = util.load_csv(roster_path)
+
+    git_tools.cache_git_credential()
+
+    if sid is None:
+        for i_student in roster.values():
+            pull_once(student_info=i_student, https=https)
+    else:
+        pull_once(student_info=roster[sid], https=https, everyone=False)
+
+    git_tools.uncache_git_credential()
 
 
 def load_config():
@@ -23,42 +39,28 @@ def load_config():
     return load_dict['git_config']
 
 
-def git_clone(folder_path, git_ssh):
-    util.make_folder(folder_path)
-    command = "cd %s " \
-              "&& eval `ssh-agent -s` " \
-              "&& ssh-add %s " \
-              "&& git clone %s " \
-              "&& ssh-agent -k" \
-              % (folder_path, g_ssh_key_path, git_ssh)
-
-    return subprocess.call(command, shell=True)
-
-
-def git_pull(repo_path):
-    command = "cd %s " \
-              "&& eval `ssh-agent -s` " \
-              "&& ssh-add %s " \
-              "&& git checkout . " \
-              "&& git pull " \
-              "&& ssh-agent -k" \
-              % (repo_path, g_ssh_key_path)
-
-    return subprocess.call(command, shell=True)
-
-
-def pull_once(student_info, is_all=True):
+def pull_once(student_info, https=False, everyone=True):
     trial = 0
     last_name = student_info['last_name'].lower()
     first_name = student_info['first_name'].lower()
-    git_ssh = student_info['git_ssh']
+    git_ssh_url = student_info['git_ssh']
     repo_name = student_info['repo_name']
     folder_name = last_name + '_' + first_name
     folder_path = path.homework_path / folder_name
     repo_path = folder_path / repo_name
 
+    if https:
+        git_pull = git_tools.git_https_pull
+        git_clone = git_tools.git_https_clone
+        git_url = git_tools.git_ssh_to_https(git_ssh_url)
+    else:
+        git_pull = git_tools.git_ssh_pull
+        git_clone = git_tools.git_ssh_clone
+        git_url = git_ssh_url
+
     print(first_name + " " + last_name + ":")
 
+    print("Trying to directly pull it...")
     if git_pull(repo_path) == 0:
         print()
         return
@@ -67,13 +69,13 @@ def pull_once(student_info, is_all=True):
     print("Trying to re-clone it...")
     util.del_folder(folder_path)
 
-    while (git_clone(folder_path, git_ssh) != 0) and (trial < MAX_TRIAL):
+    while (git_clone(folder_path, git_url) != 0) and (trial < MAX_TRIAL):
         print("Failed to clone the repo of this student.")
         print("Re-cloning...")
         util.del_folder(folder_path)
         trial += 1
 
-    if trial >= 3 and is_all:
+    if trial >= 3 and everyone:
         print("\nUnsolvable error.")
 
         while True:
@@ -87,24 +89,10 @@ def pull_once(student_info, is_all=True):
     print()
 
 
-def pull(sid):
-    global g_ssh_key_path
-
-    git_config = load_config()
-    g_ssh_key_path = git_config['ssh_key_path']
-    roster_path = path.rosters_path / git_config['roster_file']
-    roster = util.load_csv(roster_path)
-
-    if sid is None:
-        for i_student in roster.values():
-            pull_once(student_info=i_student)
-    else:
-        pull_once(student_info=roster[sid], is_all=False)
-
-
 if __name__ == "__main__":
     m_parser = argparse.ArgumentParser()
-    m_parser.add_argument('-i', '-id')
+    m_parser.add_argument('-i', '--id', help='pull a particular repository with the given student id')
+    m_parser.add_argument('--https', action='store_true', help='pull the repository(ies) using https urls')
     m_args = m_parser.parse_args()
 
-    pull(sid=m_args.i)
+    pull(sid=m_args.id, https=m_args.https)
