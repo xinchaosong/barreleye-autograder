@@ -40,7 +40,7 @@ This autograder has been used for the following courses at Northeastern Universi
 	    {
 	      "git_config": {
 	        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH private key for a GitHub server. 
-		                                       // If using Git with HTTPS only, this field can be left empty.
+		                                           // If using Git with HTTPS only, this field can be left empty.
 	        "roster_file": "example_roster.csv"    // The file name of the student roster.
 	      }
 	    }
