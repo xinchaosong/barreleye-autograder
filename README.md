@@ -35,12 +35,12 @@ This autograder has been used for the following courses at Northeastern Universi
 
 1. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the Git configuration in *git\_config.json*).
 
-2. Under the directory **config**, modify the Git configuration in *git\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux. Note that if using Git with HTTPS only, the field "ssh_key_path" can be left empty.
+2. Under the directory **config**, modify the Git configuration in *git\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux. Note that if using Git with HTTPS only, the field "ssh_key_path" can be left blank.
 
 	    {
 	      "git_config": {
 	        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH private key for a GitHub server. 
-		                                           // If using Git with HTTPS only, this field can be left empty.
+		                                           // If using Git with HTTPS only, this field can be left blank.
 	        "roster_file": "example_roster.csv"    // The file name of the student roster.
 	      }
 	    }
