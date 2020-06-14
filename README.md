@@ -13,7 +13,7 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ## Features
 
-- Downloading all student's repositories automatically
+- Downloading all student's repositories automatically with SSH or HTTPS
 - Running the instructor-made tests for all students automatically
 - Batch grading and automatically generating grading sheet and grading reports
 - Able to handle tests crash and timeout issues
@@ -21,7 +21,7 @@ This autograder has been used for the following courses at Northeastern Universi
  
 ## Environment Requirements
 
-- Linux
+- Linux (tested on Ubuntu, Debian, and CentOS)
 - Python >= 3.7 (or 3.6 under CPython)
 - Valgrind installed
 
@@ -33,23 +33,28 @@ This autograder has been used for the following courses at Northeastern Universi
 
 ### Before cloning/pulling the repository of students:
 
-1. Make sure the current terminal can access to GitHub through SSH using a SSH key with no passphrase. If you are not familar with connecting to GitHub with SSH, please follow [this tutorial](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) from GitHub. 
-2. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the git configuration in *git\_config.json*).
-3. Under the directory **config**, modify the git configuration in *git\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux.
+1. Under the directory **rosters**, fill all information of students into *roster.csv* (can be any name provided that it matches the Git configuration in *git\_config.json*).
+
+2. Under the directory **config**, modify the Git configuration in *git\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux. Note that if you want to use Git with HTTPS only, the field "ssh_key_path" can be left empty.
 
 	    {
 	      "git_config": {
-	        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH key for GitHub
-	        "roster_file": "example_roster.csv"    // The file name of the student roster
+	        "ssh_key_path": "~/.ssh/example_ssh",  // The full file path of the SSH private key for a GitHub server. If using Git with HTTPS only, this field can be left empty.
+	        "roster_file": "example_roster.csv"    // The file name of the student roster.
 	      }
 	    }
+
+3. If you want to use Git with SSH (which is recommended), please make sure the current terminal can access to the GitHub server using an SSH key with no passphrase. If you are not familiar with connecting to GitHub with SSH with keys, please follow [this tutorial](https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) from GitHub. 
 
 ### Before running the grading script:
 
 1. Under the directory **homework**, make sure all homework to be graded has been pulled/cloned there either by running this grader or manually copying. Check the directory structures of all students and modify anything wrong back to the standard way.
+
 2. Under the directory **rosters**, fill all information of students into *roster.csv*.
+
 3. Under the directory **grading-tests**, make a folder named by the homework title and put all test files such as *grading\_tests.c* and a corresponding test checklist file *test\_list.csv* that are compatible with the grader and students' homework.
-5. Under the directory **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux.
+
+4. Under the directory **config**, modify the grading configuration in *grading\_config.json* properly. An example is shown below. Please be careful about the letter cases of all file and path names; they are **case-sensitive** on Linux.
 
 		{
 	      "config": {
@@ -76,7 +81,7 @@ This autograder has been used for the following courses at Northeastern Universi
 	      }
 	    }
 
-**Note:** *roster.csv*, *grading\_tests.c*, or *test\_list.csv* can be any name provided that the their name matches the grading configuration in *git\_config.json*
+**Note:** *roster.csv*, *grading\_tests.c*, or *test\_list.csv* can be any name provided that their name matches the grading configuration in *git\_config.json*
 
 ## Usage
 
@@ -84,32 +89,44 @@ If we use the example homework *example-homework-c* attached under the directory
 
 ### Clone/Pull all students' repositories:
 
-    ./barreleye.sh -p
+Git with SSH:
 
+    ./barreleye.sh pull
+    
+Git with HTTPS:
+
+    ./barreleye.sh pull --https
+    
 If any repository is not cloned successfully, the program will try to re-clone it **up to three times**. If the clone still fails for some reason, the program will prompt if the user wants to give up the current cloning and continue to process the next repository, or exit the program.
 
 ### Clone/Pull a specific student's repository:
 
 For grading a student whose id is 1 in the *roster.csv*, use the following command to clone his/her repository. If the repository is not cloned successfully, the program will try to re-clone it **up to three times** before giving up.
 
-    ./barreleye.sh -p -i 1
+Git with SSH:
+
+    ./barreleye.sh pull -i 1
+    
+Git with HTTPS:
+
+    ./barreleye.sh pull --https -i 1
 
 ### Grade for all students together without memory-leak examinations:
 
     ./barreleye.sh
 
-The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen. A grading report recording all details will be generate for each student under the student's directory for the given homework graded.
+The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen. A grading report recording all details will be generated for each student under the student's directory for the given homework graded.
 
 ### Grade for a single student:
 
-- Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
+- Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
     	./barreleye.sh -i 1
 
-- For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
+- For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
-	    ./barreleye.sh -i 1 -t
+    	./barreleye.sh -i 1 -t
 
-- For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen. A corresponding grading report will be generate under the student's directory for the given homework graded.
+- For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
-	    ./barreleye.sh -i 1 -m
+    	./barreleye.sh -i 1 -m
