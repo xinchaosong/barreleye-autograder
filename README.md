@@ -92,11 +92,11 @@ If we use the example homework *example-homework-c* attached under the directory
 
 Git with SSH:
 
-    ./barreleye.sh pull
+    bash barreleye.sh pull
     
 Git with HTTPS:
 
-    ./barreleye.sh pull --https
+    bash barreleye.sh pull --https
         
 If any repository is not cloned successfully, the program will try to re-clone it **up to three times**. If the clone still fails for some reason, the program will prompt if the user wants to give up the current cloning and continue to process the next repository, or exit the program.
 
@@ -108,15 +108,15 @@ For grading a student whose id is 1 in the *roster.csv*, use the following comma
 
 Git with SSH:
 
-    ./barreleye.sh pull -i 1
+    bash barreleye.sh pull -i 1
     
 Git with HTTPS:
 
-    ./barreleye.sh pull --https -i 1
+    bash barreleye.sh pull --https -i 1
 
 ### Grade for all students together without memory-leak examinations:
 
-    ./barreleye.sh
+    bash barreleye.sh
 
 The total score for each student will be shown on the screen. The detailed scores will be recorded into *xxx\_grades.csv* under the directory **grades**. No grading comments will be generated or shown on the screen. A grading report recording all details will be generated for each student under the student's directory for the given homework graded.
 
@@ -124,12 +124,12 @@ The total score for each student will be shown on the screen. The detailed score
 
 - Use the following command for grading a student whose id is 1 in the *roster.csv* with both tests and memory-leak examinations. The detailed scores, grading comments, and Valgrind output will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
-    	./barreleye.sh -i 1
+    	bash barreleye.sh -i 1
 
 - For grading the same student with tests only but not memory-leak examinations, add "-t" flag into the command as follows. The detailed scores and grading comments will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
-    	./barreleye.sh -i 1 -t
+    	bash barreleye.sh -i 1 -t
 
 - For grading the same student with memory-leak examinations only but not tests, add "-m" flag into the command as follows. The Valgrind output will be shown on the screen. A corresponding grading report will be generated under the student's directory for the given homework graded.
 
-    	./barreleye.sh -i 1 -m
+    	bash barreleye.sh -i 1 -m
