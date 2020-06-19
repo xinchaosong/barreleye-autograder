@@ -12,11 +12,12 @@ from scripts import util
 
 ssh_key_path = ""
 git_credential_timeout = 3600
+gitconfig_temp_file = '.gitconfig_barreleye'
 
 
 def copy_gitconfig():
     gitconfig_src = Path.home() / '.gitconfig'
-    gitconfig_dst = Path.home() / '.gitconfig-barreleye'
+    gitconfig_dst = Path.home() / gitconfig_temp_file
 
     util.copy_file(gitconfig_src, gitconfig_dst)
 
@@ -30,7 +31,7 @@ def cache_git_credential():
 
 
 def restore_gitconfig():
-    gitconfig_src = Path.home() / '.gitconfig-barreleye'
+    gitconfig_src = Path.home() / gitconfig_temp_file
     gitconfig_dst = Path.home() / '.gitconfig'
 
     if gitconfig_src.exists():
