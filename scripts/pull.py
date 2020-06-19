@@ -20,15 +20,17 @@ def pull(sid, https=False):
     roster_path = path.rosters_path / git_config['roster_file']
     roster = util.load_csv(roster_path)
 
-    git_tools.cache_git_credential()
+    try:
+        git_tools.cache_git_credential()
 
-    if sid is None:
-        for i_student in roster.values():
-            pull_once(student_info=i_student, https=https)
-    else:
-        pull_once(student_info=roster[sid], https=https, everyone=False)
+        if sid is None:
+            for i_student in roster.values():
+                pull_once(student_info=i_student, https=https)
+        else:
+            pull_once(student_info=roster[sid], https=https, everyone=False)
 
-    git_tools.uncache_git_credential()
+    finally:
+        git_tools.uncache_git_credential()
 
 
 def load_config():
