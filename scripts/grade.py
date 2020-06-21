@@ -71,43 +71,49 @@ def grade_single(config_id, config, student_info, test_list, check_tests, check_
 
     print(first_name + " " + last_name + ":\n")
 
-    # Copies all grader files.
-    copy_success = copy_grader_files(config, tests_path, homework_path)
-    if not copy_success:
-        err_msg = "ERROR: fail to copy the grader files.\n"
-        logger.log(err_msg)
-        print(err_msg)
+    try:
+        # Copies all grader files.
+        copy_success = copy_grader_files(config, tests_path, homework_path)
+        if not copy_success:
+            err_msg = "ERROR: fail to copy the grader files.\n"
+            logger.log(err_msg)
+            print(err_msg)
+
+            logger.save_log(log_path)
+            clean(config, homework_path)
+
+            return all_grades
+
+        # Runs grader tests.
+        if check_tests:
+            all_grades = run_grading_tests(homework_path=homework_path,
+                                           grader_gcc_cmd=grader_gcc_cmd,
+                                           grader_target=config['grader_target'],
+                                           test_list=test_list,
+                                           all_grades=all_grades,
+                                           logger=logger,
+                                           timeout=config['timeout'],
+                                           show_details=show_details)
+
+        # Runs the memory leak examinations.
+        if check_leak:
+            run_memory_exam(homework_path=homework_path,
+                            student_gcc_cmd=student_gcc_cmd,
+                            student_target=config['student_target'],
+                            grader_gcc_cmd=grader_gcc_cmd,
+                            grader_target=config['grader_target'],
+                            memory_leak_test_ids=config['memory_leak_test_id'],
+                            logger=logger,
+                            timeout=config['timeout'],
+                            show_details=show_details)
 
         logger.save_log(log_path)
+
+    except (KeyboardInterrupt, SystemExit):
+        print()
+
+    finally:
         clean(config, homework_path)
-
-        return all_grades
-
-    # Runs grader tests.
-    if check_tests:
-        all_grades = run_grading_tests(homework_path=homework_path,
-                                       grader_gcc_cmd=grader_gcc_cmd,
-                                       grader_target=config['grader_target'],
-                                       test_list=test_list,
-                                       all_grades=all_grades,
-                                       logger=logger,
-                                       timeout=config['timeout'],
-                                       show_details=show_details)
-
-    # Runs the memory leak examinations.
-    if check_leak:
-        run_memory_exam(homework_path=homework_path,
-                        student_gcc_cmd=student_gcc_cmd,
-                        student_target=config['student_target'],
-                        grader_gcc_cmd=grader_gcc_cmd,
-                        grader_target=config['grader_target'],
-                        memory_leak_test_ids=config['memory_leak_test_id'],
-                        logger=logger,
-                        timeout=config['timeout'],
-                        show_details=show_details)
-
-    logger.save_log(log_path)
-    clean(config, homework_path)
 
     return all_grades
 
@@ -266,10 +272,14 @@ def save_grades(csv_path, roster):
 
 
 if __name__ == "__main__":
-    m_parser = argparse.ArgumentParser()
-    m_parser.add_argument('-i', '--id', help='grade a particular assignment with the given student id')
-    m_parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
-    m_parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
-    m_args = m_parser.parse_args()
+    try:
+        m_parser = argparse.ArgumentParser()
+        m_parser.add_argument('-i', '--id', help='grade a particular assignment with the given student id')
+        m_parser.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
+        m_parser.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
+        m_args = m_parser.parse_args()
 
-    grade(sid=m_args.id, check_tests=m_args.m, check_leak=m_args.t)
+        grade(sid=m_args.id, check_tests=m_args.m, check_leak=m_args.t)
+
+    except (KeyboardInterrupt, SystemExit):
+        print()

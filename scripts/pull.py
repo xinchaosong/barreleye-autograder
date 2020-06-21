@@ -29,6 +29,9 @@ def pull(sid, https=False):
         else:
             pull_once(student_info=roster[sid], https=https, everyone=False)
 
+    except (KeyboardInterrupt, SystemExit):
+        print()
+
     finally:
         git_tools.uncache_git_credential()
 
@@ -92,9 +95,13 @@ def pull_once(student_info, https=False, everyone=True):
 
 
 if __name__ == "__main__":
-    m_parser = argparse.ArgumentParser()
-    m_parser.add_argument('-i', '--id', help='pull a particular repository with the given student id')
-    m_parser.add_argument('--https', action='store_true', help='pull the repository(ies) using https urls')
-    m_args = m_parser.parse_args()
+    try:
+        m_parser = argparse.ArgumentParser()
+        m_parser.add_argument('-i', '--id', help='pull a particular repository with the given student id')
+        m_parser.add_argument('--https', action='store_true', help='pull the repository(ies) using https urls')
+        m_args = m_parser.parse_args()
 
-    pull(sid=m_args.id, https=m_args.https)
+        pull(sid=m_args.id, https=m_args.https)
+
+    except (KeyboardInterrupt, SystemExit):
+        print()
