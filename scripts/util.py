@@ -42,7 +42,7 @@ def copy_file(src, dst):
     try:
         shutil.copyfile(src, dst)
         return True
-    except Exception as e:
+    except Exception:
         return False
 
 

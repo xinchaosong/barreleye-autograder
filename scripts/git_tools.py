@@ -5,7 +5,6 @@
 # Copyright © 2020 Xinchao Song. All rights reserved.
 
 import subprocess
-import sys
 from pathlib import Path
 
 from scripts import util

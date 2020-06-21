@@ -167,7 +167,7 @@ def run_grading_tests(homework_path, grader_gcc_cmd, grader_target, test_list, a
             else:
                 score = 0
 
-        except Exception as e:
+        except Exception:
             score = 0
 
         if score == 0:
