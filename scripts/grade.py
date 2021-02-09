@@ -208,7 +208,7 @@ def run_memory_exam(homework_path, student_gcc_cmd, student_target, grader_gcc_c
     # Memory leak examination: the student's unit tests
     logger.log("Memory leak examination: the student's unit tests\n", to_stdout=show_details)
 
-    if student_gcc_cmd is not None or student_gcc_cmd != "":
+    if student_gcc_cmd:
         try:
             # Compilation
             compile_code(homework_path, student_gcc_cmd, stdout=stdout, stderr=stderr)
@@ -257,7 +257,9 @@ def clean(config, homework_path):
     student_target = config['student_target']
 
     util.del_file(homework_path / grader_target)
-    util.del_file(homework_path / student_target)
+
+    if student_target:
+        util.del_file(homework_path / student_target)
 
     for file in grader_test_files:
         util.del_file(homework_path / file)
