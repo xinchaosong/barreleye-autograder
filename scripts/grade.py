@@ -208,20 +208,21 @@ def run_memory_exam(homework_path, student_gcc_cmd, student_target, grader_gcc_c
     # Memory leak examination: the student's unit tests
     logger.log("Memory leak examination: the student's unit tests\n", to_stdout=show_details)
 
-    try:
-        # Compilation
-        compile_code(homework_path, student_gcc_cmd, stdout=stdout, stderr=stderr)
-
-        # Runs Valgrind
+    if student_gcc_cmd is not None or student_gcc_cmd != "":
         try:
-            result = runs_valgrind(str(homework_path / student_target), timeout=timeout)
-        except Exception as e:
-            result = "Memory leak examination error: %s\n" % e
+            # Compilation
+            compile_code(homework_path, student_gcc_cmd, stdout=stdout, stderr=stderr)
 
-    except Exception:
-        result = "ERROR: compilation fails during memory leak examination. \n"
+            # Runs Valgrind
+            try:
+                result = runs_valgrind(str(homework_path / student_target), timeout=timeout)
+            except Exception as e:
+                result = "Memory leak examination error: %s\n" % e
 
-    logger.log(result + "\n", to_stdout=show_details)
+        except Exception:
+            result = "ERROR: compilation fails during memory leak examination. \n"
+
+        logger.log(result + "\n", to_stdout=show_details)
 
     # Memory leak examination: grading tests
     for i_tid in memory_leak_test_ids:
