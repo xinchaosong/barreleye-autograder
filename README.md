@@ -100,7 +100,7 @@ Git with HTTPS:
         
 If any repository is not cloned successfully, the program will try to re-clone it **up to three times**. If the clone still fails for some reason, the program will prompt if the user wants to give up the current cloning and continue to process the next repository, or exit the program.
 
-If using Git with HTTPS, you may need to enter the username and password of your GitHub account when being prompted. Your username and password will be cached by Git up to one hour or until all repositories have been pulled/cloned (whichever is first) so that you don't need to do that repeatedly for each repository.
+If using Git with HTTPS, you may need to enter the username and password of your GitHub account when being prompted. Your username and password will be cached by Git up to one hour or until all repositories have been pulled/cloned (whichever is first) so that you don't need to put your credentials repeatedly for each repository.
 
 ### Clone/Pull a specific student's repository:
 
