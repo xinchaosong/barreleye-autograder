@@ -114,7 +114,7 @@ Git with HTTPS:
 
     bash barreleye.sh pull --https -i 1
 
-### Grade for all students together without memory-leak examinations:
+### Grade for all students together with memory-leak examinations:
 
     bash barreleye.sh
 
