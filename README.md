@@ -8,6 +8,7 @@ This repository is a simple autograder for the computer science courses using Gi
 
 This autograder has been used for the following courses at Northeastern University, Boston:
 
+- CS 5008: Data Structures, Algorithms, and Their Applications within Computer Systems, Spring 2021
 - CS 5006: Algorithms, Summer 2020
 - CS 3520: Programming in C++, Spring 2020
 
