@@ -20,7 +20,7 @@ if __name__ == '__main__':
         m_parser_pull.add_argument('--https', action='store_true', help='pull the repository(ies) using https urls')
 
         # Grading
-        m_parser_grade = m_subparsers.add_parser('grade', help='pull the repository(ies)')
+        m_parser_grade = m_subparsers.add_parser('grade', help='grade the repository(ies)')
         m_parser_grade.add_argument('-i', '--id', help='process a particular assignment with the given student id')
         m_parser_grade.add_argument('-t', action='store_false', help='only run tests but not memory leak check')
         m_parser_grade.add_argument('-m', action='store_false', help='only run memory leak check but not tests')
