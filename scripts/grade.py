@@ -206,9 +206,9 @@ def run_memory_exam(homework_path, student_gcc_cmd, student_target, grader_gcc_c
     stderr = None if show_details else subprocess.DEVNULL
 
     # Memory leak examination: the student's unit tests
-    logger.log("Memory leak examination: the student's unit tests\n", to_stdout=show_details)
-
     if student_gcc_cmd:
+        logger.log("Memory leak examination: the student's unit tests\n", to_stdout=show_details)
+
         try:
             # Compilation
             compile_code(homework_path, student_gcc_cmd, stdout=stdout, stderr=stderr)
